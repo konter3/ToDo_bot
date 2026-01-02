@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36623.8 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "TODO_bot", "TODO_bot\TODO_bot.pyproj", "{F1D42284-95FA-4F77-82DF-A1CC74783672}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F1D42284-95FA-4F77-82DF-A1CC74783672}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1D42284-95FA-4F77-82DF-A1CC74783672}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8058A25F-7293-43EF-8FF7-074D870163AA}
+	EndGlobalSection
+EndGlobal

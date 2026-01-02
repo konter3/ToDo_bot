@@ -1,0 +1,5 @@
+start.bat
+venv_start.bat
+.git/
+.vs/
+venv/

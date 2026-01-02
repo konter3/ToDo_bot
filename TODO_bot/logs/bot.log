@@ -1,0 +1,69 @@
+2025-12-23 23:05:20,777 | INFO | __main__ | Bot starting
+2025-12-23 23:05:20,952 | INFO | apscheduler.scheduler | Scheduler started
+2025-12-23 23:05:20,953 | INFO | aiogram.dispatcher | Start polling
+2025-12-23 23:05:21,213 | INFO | aiogram.dispatcher | Run polling for bot @kntr_list_bot id=8499175413 - 'list_jobs'
+2025-12-23 23:05:38,044 | INFO | aiogram.event | Update id=940332731 is not handled. Duration 0 ms by bot id=8499175413
+2025-12-23 23:05:46,864 | INFO | aiogram.event | Update id=940332732 is handled. Duration 248 ms by bot id=8499175413
+2025-12-23 23:05:53,919 | INFO | handlers.tasks | Task added: 1920657547
+2025-12-23 23:05:54,024 | INFO | aiogram.event | Update id=940332733 is handled. Duration 110 ms by bot id=8499175413
+2025-12-23 23:05:57,199 | INFO | aiogram.event | Update id=940332734 is handled. Duration 93 ms by bot id=8499175413
+2025-12-23 23:06:02,235 | INFO | aiogram.event | Update id=940332735 is handled. Duration 102 ms by bot id=8499175413
+2025-12-23 23:06:04,163 | INFO | aiogram.event | Update id=940332736 is handled. Duration 182 ms by bot id=8499175413
+2025-12-23 23:06:06,133 | INFO | aiogram.event | Update id=940332737 is handled. Duration 101 ms by bot id=8499175413
+2025-12-23 23:06:06,723 | WARNING | handlers.admin | Admin requested users list
+2025-12-23 23:06:06,820 | INFO | aiogram.event | Update id=940332738 is handled. Duration 99 ms by bot id=8499175413
+2025-12-23 23:06:08,226 | INFO | aiogram.event | Update id=940332739 is handled. Duration 101 ms by bot id=8499175413
+2025-12-23 23:06:36,504 | INFO | aiogram.event | Update id=940332740 is handled. Duration 99 ms by bot id=8499175413
+2025-12-23 23:06:39,723 | INFO | aiogram.event | Update id=940332741 is handled. Duration 97 ms by bot id=8499175413
+2025-12-23 23:06:42,975 | INFO | aiogram.event | Update id=940332742 is handled. Duration 173 ms by bot id=8499175413
+2025-12-23 23:06:48,458 | INFO | handlers.tasks | Task added: 1930027918
+2025-12-23 23:06:48,635 | INFO | aiogram.event | Update id=940332743 is handled. Duration 181 ms by bot id=8499175413
+2025-12-23 23:06:50,620 | INFO | aiogram.event | Update id=940332744 is handled. Duration 116 ms by bot id=8499175413
+2025-12-23 23:06:52,146 | INFO | aiogram.event | Update id=940332745 is handled. Duration 129 ms by bot id=8499175413
+2025-12-23 23:06:53,662 | INFO | aiogram.event | Update id=940332746 is handled. Duration 119 ms by bot id=8499175413
+2025-12-23 23:06:55,108 | INFO | handlers.tasks | Task completed: 2
+2025-12-23 23:06:55,252 | INFO | aiogram.event | Update id=940332747 is handled. Duration 149 ms by bot id=8499175413
+2025-12-23 23:06:57,047 | INFO | aiogram.event | Update id=940332748 is handled. Duration 116 ms by bot id=8499175413
+2025-12-23 23:06:58,607 | INFO | aiogram.event | Update id=940332749 is handled. Duration 93 ms by bot id=8499175413
+2025-12-23 23:07:00,708 | INFO | aiogram.event | Update id=940332750 is handled. Duration 90 ms by bot id=8499175413
+2025-12-23 23:07:07,743 | INFO | aiogram.event | Update id=940332751 is handled. Duration 95 ms by bot id=8499175413
+2025-12-23 23:07:11,338 | INFO | handlers.tasks | Task added: 1920657547
+2025-12-23 23:07:11,437 | INFO | aiogram.event | Update id=940332752 is handled. Duration 102 ms by bot id=8499175413
+2025-12-23 23:07:13,013 | INFO | aiogram.event | Update id=940332753 is handled. Duration 95 ms by bot id=8499175413
+2025-12-23 23:07:19,906 | INFO | handlers.tasks | Task added: 1930027918
+2025-12-23 23:07:20,069 | INFO | aiogram.event | Update id=940332754 is handled. Duration 167 ms by bot id=8499175413
+2025-12-23 23:07:21,985 | INFO | aiogram.event | Update id=940332755 is handled. Duration 94 ms by bot id=8499175413
+2025-12-23 23:07:25,153 | INFO | handlers.tasks | Task completed: 1
+2025-12-23 23:07:25,261 | INFO | aiogram.event | Update id=940332756 is handled. Duration 114 ms by bot id=8499175413
+2025-12-23 23:07:27,062 | INFO | aiogram.event | Update id=940332757 is handled. Duration 160 ms by bot id=8499175413
+2025-12-23 23:07:49,362 | WARNING | handlers.admin | Admin requested users list
+2025-12-23 23:07:49,454 | INFO | aiogram.event | Update id=940332758 is handled. Duration 93 ms by bot id=8499175413
+2025-12-23 23:07:51,280 | INFO | aiogram.event | Update id=940332759 is handled. Duration 100 ms by bot id=8499175413
+2025-12-23 23:08:09,676 | INFO | handlers.start | User start: 6012038682
+2025-12-23 23:08:09,830 | INFO | aiogram.event | Update id=940332760 is handled. Duration 160 ms by bot id=8499175413
+2025-12-23 23:08:11,361 | WARNING | handlers.admin | Admin requested users list
+2025-12-23 23:08:11,462 | INFO | aiogram.event | Update id=940332761 is handled. Duration 102 ms by bot id=8499175413
+2025-12-23 23:08:13,662 | INFO | aiogram.event | Update id=940332762 is handled. Duration 169 ms by bot id=8499175413
+2025-12-23 23:14:43,863 | INFO | aiogram.event | Update id=940332763 is handled. Duration 102 ms by bot id=8499175413
+2025-12-23 23:14:45,411 | INFO | handlers.tasks | Task completed: 3
+2025-12-23 23:14:45,596 | INFO | aiogram.event | Update id=940332764 is handled. Duration 190 ms by bot id=8499175413
+2025-12-23 23:14:48,334 | INFO | aiogram.event | Update id=940332765 is handled. Duration 119 ms by bot id=8499175413
+2025-12-23 23:14:50,165 | INFO | aiogram.event | Update id=940332766 is handled. Duration 124 ms by bot id=8499175413
+2025-12-23 23:15:00,354 | WARNING | handlers.admin | Admin requested users list
+2025-12-23 23:15:00,458 | INFO | aiogram.event | Update id=940332767 is handled. Duration 105 ms by bot id=8499175413
+2025-12-23 23:15:02,007 | INFO | aiogram.event | Update id=940332768 is handled. Duration 95 ms by bot id=8499175413
+2025-12-23 23:15:45,660 | INFO | aiogram.dispatcher | Polling stopped
+2025-12-23 23:15:45,661 | ERROR | aiogram.dispatcher | Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2025-12-23 23:15:45,661 | WARNING | aiogram.dispatcher | Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8499175413)
+2025-12-23 23:15:45,924 | INFO | aiogram.dispatcher | Polling stopped for bot @kntr_list_bot id=8499175413 - 'list_jobs'
+2026-01-02 14:33:42,985 | INFO | __main__ | Bot starting
+2026-01-02 14:33:43,155 | INFO | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-02 14:33:43,156 | INFO | apscheduler.scheduler | Added job "send_daily" to job store "default"
+2026-01-02 14:33:43,156 | INFO | apscheduler.scheduler | Scheduler started
+2026-01-02 14:33:43,156 | INFO | aiogram.dispatcher | Start polling
+2026-01-02 14:33:47,993 | INFO | aiogram.dispatcher | Run polling for bot @kntr_test_bot id=8256805438 - 'kntr_test_bot'
+2026-01-02 14:34:51,900 | INFO | __main__ | Bot starting
+2026-01-02 14:34:52,041 | INFO | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-02 14:34:52,042 | INFO | apscheduler.scheduler | Added job "send_daily" to job store "default"
+2026-01-02 14:34:52,042 | INFO | apscheduler.scheduler | Scheduler started
+2026-01-02 14:34:52,042 | INFO | aiogram.dispatcher | Start polling
