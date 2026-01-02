@@ -67,3 +67,136 @@
 2026-01-02 14:34:52,042 | INFO | apscheduler.scheduler | Added job "send_daily" to job store "default"
 2026-01-02 14:34:52,042 | INFO | apscheduler.scheduler | Scheduler started
 2026-01-02 14:34:52,042 | INFO | aiogram.dispatcher | Start polling
+2026-01-02 14:47:17,713 | INFO | __main__ | Bot starting
+2026-01-02 14:47:17,857 | INFO | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-02 14:47:17,857 | INFO | apscheduler.scheduler | Added job "send_daily" to job store "default"
+2026-01-02 14:47:17,857 | INFO | apscheduler.scheduler | Scheduler started
+2026-01-02 14:47:17,858 | INFO | aiogram.dispatcher | Start polling
+2026-01-02 14:47:18,400 | INFO | aiogram.dispatcher | Run polling for bot @kntr_test_bot id=8256805438 - 'kntr_test_bot'
+2026-01-02 14:47:29,769 | INFO | handlers.start | User start: 1920657547
+2026-01-02 14:47:37,137 | INFO | aiogram.event | Update id=439160594 is handled. Duration 1572 ms by bot id=8256805438
+2026-01-02 14:47:37,141 | INFO | aiogram.event | Update id=439160593 is handled. Duration 7378 ms by bot id=8256805438
+2026-01-02 14:47:42,035 | INFO | aiogram.event | Update id=439160595 is handled. Duration 88 ms by bot id=8256805438
+2026-01-02 14:47:44,228 | INFO | handlers.tasks | Task added: 1920657547
+2026-01-02 14:47:44,328 | INFO | aiogram.event | Update id=439160596 is handled. Duration 105 ms by bot id=8256805438
+2026-01-02 14:47:46,864 | INFO | aiogram.event | Update id=439160597 is handled. Duration 1021 ms by bot id=8256805438
+2026-01-02 14:47:47,367 | INFO | aiogram.event | Update id=439160598 is handled. Duration 112 ms by bot id=8256805438
+2026-01-02 14:47:50,331 | INFO | aiogram.event | Update id=439160599 is handled. Duration 394 ms by bot id=8256805438
+2026-01-02 14:48:06,374 | INFO | aiogram.event | Update id=439160600 is handled. Duration 220 ms by bot id=8256805438
+2026-01-02 14:48:17,420 | INFO | __main__ | Bot starting
+2026-01-02 14:48:17,590 | INFO | apscheduler.scheduler | Scheduler started
+2026-01-02 14:48:17,590 | INFO | aiogram.dispatcher | Start polling
+2026-01-02 14:48:19,316 | INFO | aiogram.dispatcher | Run polling for bot @kntr_test_bot id=8256805438 - 'kntr_test_bot'
+2026-01-02 14:48:26,214 | INFO | aiogram.event | Update id=439160601 is handled. Duration 232 ms by bot id=8256805438
+2026-01-02 14:48:27,331 | INFO | aiogram.event | Update id=439160602 is handled. Duration 122 ms by bot id=8256805438
+2026-01-02 14:48:29,027 | INFO | handlers.tasks | Task added: 1920657547
+2026-01-02 14:48:29,223 | INFO | aiogram.event | Update id=439160603 is handled. Duration 203 ms by bot id=8256805438
+2026-01-02 14:48:31,976 | INFO | aiogram.event | Update id=439160604 is handled. Duration 109 ms by bot id=8256805438
+2026-01-02 14:48:33,474 | INFO | aiogram.event | Update id=439160605 is handled. Duration 92 ms by bot id=8256805438
+2026-01-02 14:48:34,874 | WARNING | handlers.admin | Admin requested users list
+2026-01-02 14:48:35,760 | INFO | aiogram.event | Update id=439160606 is handled. Duration 888 ms by bot id=8256805438
+2026-01-02 14:48:36,930 | INFO | aiogram.event | Update id=439160607 is handled. Duration 344 ms by bot id=8256805438
+2026-01-02 14:48:41,141 | INFO | aiogram.event | Update id=439160608 is handled. Duration 99 ms by bot id=8256805438
+2026-01-02 14:48:43,311 | INFO | handlers.tasks | Task completed: 1
+2026-01-02 14:48:44,037 | INFO | aiogram.event | Update id=439160609 is handled. Duration 732 ms by bot id=8256805438
+2026-01-02 14:48:46,368 | INFO | aiogram.event | Update id=439160610 is handled. Duration 717 ms by bot id=8256805438
+2026-01-02 14:48:48,014 | INFO | handlers.tasks | Task added: 1920657547
+2026-01-02 14:48:48,685 | INFO | aiogram.event | Update id=439160611 is handled. Duration 676 ms by bot id=8256805438
+2026-01-02 14:49:19,540 | INFO | handlers.start | User start: 6012038682
+2026-01-02 14:49:20,163 | INFO | aiogram.event | Update id=439160612 is handled. Duration 626 ms by bot id=8256805438
+2026-01-02 14:49:22,644 | INFO | aiogram.event | Update id=439160613 is handled. Duration 403 ms by bot id=8256805438
+2026-01-02 14:49:23,836 | INFO | aiogram.event | Update id=439160614 is handled. Duration 89 ms by bot id=8256805438
+2026-01-02 14:57:10,160 | INFO | __main__ | Bot starting
+2026-01-02 14:57:10,305 | INFO | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-02 14:57:10,305 | INFO | apscheduler.scheduler | Added job "send_daily" to job store "default"
+2026-01-02 14:57:10,305 | INFO | apscheduler.scheduler | Scheduler started
+2026-01-02 14:57:10,306 | INFO | aiogram.dispatcher | Start polling
+2026-01-02 14:57:12,439 | INFO | aiogram.dispatcher | Run polling for bot @kntr_test_bot id=8256805438 - 'kntr_test_bot'
+2026-01-02 14:57:19,219 | INFO | handlers.start | User start: 1920657547
+2026-01-02 14:57:22,326 | INFO | aiogram.event | Update id=439160615 is handled. Duration 3112 ms by bot id=8256805438
+2026-01-02 14:57:23,837 | INFO | aiogram.event | Update id=439160616 is handled. Duration 104 ms by bot id=8256805438
+2026-01-02 14:57:25,379 | INFO | handlers.tasks | Task completed: 2
+2026-01-02 14:57:26,823 | INFO | aiogram.event | Update id=439160617 is handled. Duration 1449 ms by bot id=8256805438
+2026-01-02 14:57:29,845 | INFO | aiogram.event | Update id=439160618 is handled. Duration 720 ms by bot id=8256805438
+2026-01-02 14:57:31,218 | INFO | aiogram.event | Update id=439160619 is handled. Duration 92 ms by bot id=8256805438
+2026-01-02 14:57:33,198 | INFO | aiogram.event | Update id=439160620 is handled. Duration 104 ms by bot id=8256805438
+2026-01-02 14:57:39,518 | INFO | handlers.tasks | Task added: 1920657547
+2026-01-02 14:57:39,641 | INFO | aiogram.event | Update id=439160621 is handled. Duration 127 ms by bot id=8256805438
+2026-01-02 14:57:46,630 | INFO | aiogram.event | Update id=439160622 is handled. Duration 103 ms by bot id=8256805438
+2026-01-02 14:57:52,257 | INFO | aiogram.event | Update id=439160623 is not handled. Duration 1 ms by bot id=8256805438
+2026-01-02 14:57:52,257 | ERROR | aiogram.event | Cause exception while process update id=439160623 by bot id=8256805438
+IntegrityError: NOT NULL constraint failed: tasks.title
+Traceback (most recent call last):
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 320, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 164, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 27, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 58, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\fsm\middleware.py", line 43, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 283, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\router.py", line 189, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\router.py", line 181, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\TODO_bot\handlers\tasks.py", line 22, in save_task
+    await db.execute(
+    ...<2 lines>...
+    )
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiosqlite\core.py", line 223, in execute
+    cursor = await self._execute(self._conn.execute, sql, parameters)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiosqlite\core.py", line 160, in _execute
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiosqlite\core.py", line 63, in _connection_worker_thread
+    result = function()
+sqlite3.IntegrityError: NOT NULL constraint failed: tasks.title
+2026-01-02 14:57:58,584 | INFO | handlers.start | User start: 1920657547
+2026-01-02 14:57:58,731 | INFO | aiogram.event | Update id=439160624 is handled. Duration 148 ms by bot id=8256805438
+2026-01-02 14:58:03,512 | INFO | aiogram.event | Update id=439160625 is handled. Duration 825 ms by bot id=8256805438
