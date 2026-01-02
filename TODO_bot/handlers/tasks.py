@@ -1,7 +1,10 @@
 ﻿from aiogram import Router, F
 from aiogram.types import CallbackQuery, Message, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.fsm.context import FSMContext
+
 from handlers.states import AddTask
+from utils.safe_edit import safe_edit
+
 import aiosqlite
 import logging
 
@@ -56,21 +59,19 @@ async def show_tasks(cb: CallbackQuery):
         tasks = await cursor.fetchall()
 
     if not tasks:
-        await cb.message.edit_text(
-            "✅ Дел нет",
-            reply_markup=main_menu(cb.from_user.id)
-        )
+        text = "✅ Дел нет"
+        keyboard = main_menu(cb.from_user.id)
+        await safe_edit(cb, text, keyboard)
         return
 
     text = "📋 Текущие дела:\n\n"
 
-    keyboard = []
+    keyboard_buttons = []
     row = []
-    COLUMNS = 3  # 🔥 меняй тут
+    COLUMNS = 3  # 🔥 Количество кнопок в ряд
 
     for idx, (task_id, title) in enumerate(tasks, start=1):
         text += f"{idx}. {title}\n"
-
         row.append(
             InlineKeyboardButton(
                 text=f"✅ {idx}",
@@ -79,18 +80,16 @@ async def show_tasks(cb: CallbackQuery):
         )
 
         if len(row) == COLUMNS:
-            keyboard.append(row)
+            keyboard_buttons.append(row)
             row = []
 
     if row:
-        keyboard.append(row)
+        keyboard_buttons.append(row)
 
-    keyboard.append(
-        [InlineKeyboardButton(text="⬅️ В меню", callback_data="menu")]
-    )
+    # Кнопка "Выполнить все"
+    keyboard_buttons.append([InlineKeyboardButton(text="🗑 Выполнить все", callback_data="complete_all")])
+    # Кнопка "В меню"
+    keyboard_buttons.append([InlineKeyboardButton(text="⬅️ В меню", callback_data="menu")])
 
-    await cb.message.edit_text(
-        text,
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=keyboard)
-    )
-
+    keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
+    await safe_edit(cb, text, keyboard)

@@ -3,6 +3,7 @@ from aiogram.types import CallbackQuery
 import aiosqlite
 from config import DB_NAME
 from keyboards.inline import back_menu
+from utils.safe_edit import safe_edit  # 🔥 импортируем
 
 router = Router()
 
@@ -16,11 +17,12 @@ async def done_tasks(cb: CallbackQuery):
         rows = await cursor.fetchall()
 
     if not rows:
-        await cb.message.edit_text("❌ Выполненных дел нет", reply_markup=back_menu())
+        await safe_edit(cb, "❌ Выполненных дел нет", back_menu())
         return
 
     text = "✅ Выполненные дела:\n\n"
     for title, date in rows:
         text += f"• {title}\n🕒 {date}\n\n"
 
-    await cb.message.edit_text(text, reply_markup=back_menu())
+    await safe_edit(cb, text, back_menu())
+

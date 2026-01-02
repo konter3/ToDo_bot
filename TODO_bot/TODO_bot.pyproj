@@ -24,7 +24,9 @@
     <Compile Include="config.py" />
     <Compile Include="database\db.py" />
     <Compile Include="handlers\admin.py" />
+    <Compile Include="handlers\cancel.py" />
     <Compile Include="handlers\completed.py" />
+    <Compile Include="handlers\complete_task.py" />
     <Compile Include="handlers\menu.py" />
     <Compile Include="handlers\start.py" />
     <Compile Include="handlers\states.py" />
@@ -33,6 +35,7 @@
     <Compile Include="logging_config.py" />
     <Compile Include="scheduler\daily.py" />
     <Compile Include="TODO_bot.py" />
+    <Compile Include="utils\safe_edit.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="logs\bot.log" />
@@ -43,6 +46,7 @@
     <Folder Include="database\" />
     <Folder Include="handlers\" />
     <Folder Include="keyboards\" />
+    <Folder Include="utils\" />
     <Folder Include="scheduler\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
