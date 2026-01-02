@@ -236,3 +236,10 @@ sqlite3.IntegrityError: NOT NULL constraint failed: tasks.title
 2026-01-02 15:10:55,426 | INFO | aiogram.event | Update id=439160643 is handled. Duration 103 ms by bot id=8256805438
 2026-01-02 15:10:57,175 | INFO | aiogram.event | Update id=439160644 is handled. Duration 405 ms by bot id=8256805438
 2026-01-02 15:10:58,886 | INFO | aiogram.event | Update id=439160645 is handled. Duration 87 ms by bot id=8256805438
+2026-01-02 15:15:05,311 | INFO | __main__ | Bot starting
+2026-01-02 15:15:05,458 | INFO | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-02 15:15:05,459 | INFO | apscheduler.scheduler | Added job "send_daily" to job store "default"
+2026-01-02 15:15:05,459 | INFO | apscheduler.scheduler | Scheduler started
+2026-01-02 15:15:05,459 | INFO | aiogram.dispatcher | Start polling
+2026-01-02 15:15:06,419 | INFO | aiogram.dispatcher | Run polling for bot @kntr_test_bot id=8256805438 - 'kntr_test_bot'
+2026-01-02 15:15:11,226 | INFO | aiogram.event | Update id=439160646 is handled. Duration 3332 ms by bot id=8256805438

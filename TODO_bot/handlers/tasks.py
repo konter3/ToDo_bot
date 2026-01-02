@@ -56,38 +56,41 @@ async def show_tasks(cb: CallbackQuery):
         tasks = await cursor.fetchall()
 
     if not tasks:
-        await cb.message.edit_text("✅ Дел нет", reply_markup=main_menu(cb.from_user.id))
+        await cb.message.edit_text(
+            "✅ Дел нет",
+            reply_markup=main_menu(cb.from_user.id)
+        )
         return
 
     text = "📋 Текущие дела:\n\n"
+
     keyboard = []
+    row = []
+    COLUMNS = 3  # 🔥 меняй тут
 
     for idx, (task_id, title) in enumerate(tasks, start=1):
         text += f"{idx}. {title}\n"
-        keyboard.append([
-            InlineKeyboardButton(text=f"✅ {idx}", callback_data=f"complete_{task_id}")
-        ])
 
-    keyboard.append([InlineKeyboardButton(text="⬅️ В меню", callback_data="menu")])
-    await cb.message.edit_text(text, reply_markup=InlineKeyboardMarkup(inline_keyboard=keyboard))
-
-@router.callback_query(F.data.startswith("complete_"))
-async def complete_task(cb: CallbackQuery):
-    task_id = int(cb.data.split("_")[1])
-
-    async with aiosqlite.connect(DB_NAME) as db:
-        async with db.execute(
-            "DELETE FROM tasks WHERE id=? AND user_id=? RETURNING title",
-            (task_id, cb.from_user.id)
-        ) as cursor:
-            row = await cursor.fetchone()
-
-        if row:
-            await db.execute(
-                "INSERT INTO completed (user_id, title, completed_at) VALUES (?, ?, datetime('now'))",
-                (cb.from_user.id, row[0])
+        row.append(
+            InlineKeyboardButton(
+                text=f"✅ {idx}",
+                callback_data=f"complete_{task_id}"
             )
-            await db.commit()
+        )
 
-    logger.info(f"Task completed: {task_id}")
-    await show_tasks(cb)
+        if len(row) == COLUMNS:
+            keyboard.append(row)
+            row = []
+
+    if row:
+        keyboard.append(row)
+
+    keyboard.append(
+        [InlineKeyboardButton(text="⬅️ В меню", callback_data="menu")]
+    )
+
+    await cb.message.edit_text(
+        text,
+        reply_markup=InlineKeyboardMarkup(inline_keyboard=keyboard)
+    )
+
