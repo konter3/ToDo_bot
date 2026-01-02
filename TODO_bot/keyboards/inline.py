@@ -19,3 +19,11 @@ def back_menu():
     return InlineKeyboardMarkup(
         inline_keyboard=[[InlineKeyboardButton(text="⬅️ В меню", callback_data="menu")]]
     )
+
+## кнопка отмены
+def cancel_task():
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_add_task")]
+        ]
+    )

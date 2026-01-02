@@ -6,7 +6,7 @@ import aiosqlite
 import logging
 
 from config import DB_NAME
-from keyboards.inline import main_menu
+from keyboards.inline import main_menu, cancel_task
 
 router = Router()
 logger = logging.getLogger(__name__)
@@ -14,20 +14,37 @@ logger = logging.getLogger(__name__)
 @router.callback_query(F.data == "add_task")
 async def add_task(cb: CallbackQuery, state: FSMContext):
     await state.set_state(AddTask.waiting_for_text)
-    await cb.message.edit_text("✏️ Введите новое дело:")
+    await cb.message.edit_text(
+        "✏️ Введите новое дело:",
+        reply_markup=cancel_task()
+    )
 
-@router.message(AddTask.waiting_for_text)
+
+@router.message(AddTask.waiting_for_text, F.text)
 async def save_task(message: Message, state: FSMContext):
     async with aiosqlite.connect(DB_NAME) as db:
         await db.execute(
             "INSERT INTO tasks (user_id, title) VALUES (?, ?)",
-            (message.from_user.id, message.text)
+            (message.from_user.id, message.text.strip())
         )
         await db.commit()
 
     await state.clear()
     logger.info(f"Task added: {message.from_user.id}")
-    await message.answer("✅ Дело добавлено", reply_markup=main_menu(message.from_user.id))
+
+    await message.answer(
+        "✅ Дело добавлено",
+        reply_markup=main_menu(message.from_user.id)
+    )
+
+@router.message(AddTask.waiting_for_text)
+async def add_task_not_text(message: Message):
+    await message.answer(
+        "❌ Пожалуйста, отправьте текстовое сообщение.\n"
+        "Фото, видео и файлы не принимаются.",
+        reply_markup=cancel_task()
+    )
+
 
 @router.callback_query(F.data == "show_tasks")
 async def show_tasks(cb: CallbackQuery):

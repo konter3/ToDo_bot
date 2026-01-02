@@ -200,3 +200,39 @@ sqlite3.IntegrityError: NOT NULL constraint failed: tasks.title
 2026-01-02 14:57:58,584 | INFO | handlers.start | User start: 1920657547
 2026-01-02 14:57:58,731 | INFO | aiogram.event | Update id=439160624 is handled. Duration 148 ms by bot id=8256805438
 2026-01-02 14:58:03,512 | INFO | aiogram.event | Update id=439160625 is handled. Duration 825 ms by bot id=8256805438
+2026-01-02 15:01:47,921 | INFO | __main__ | Bot starting
+2026-01-02 15:01:48,067 | INFO | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-02 15:01:48,068 | INFO | apscheduler.scheduler | Added job "send_daily" to job store "default"
+2026-01-02 15:01:48,068 | INFO | apscheduler.scheduler | Scheduler started
+2026-01-02 15:01:48,068 | INFO | aiogram.dispatcher | Start polling
+2026-01-02 15:01:48,828 | INFO | aiogram.dispatcher | Run polling for bot @kntr_test_bot id=8256805438 - 'kntr_test_bot'
+2026-01-02 15:01:51,812 | INFO | aiogram.event | Update id=439160626 is handled. Duration 701 ms by bot id=8256805438
+2026-01-02 15:01:55,688 | INFO | aiogram.event | Update id=439160627 is handled. Duration 521 ms by bot id=8256805438
+2026-01-02 15:01:57,876 | INFO | aiogram.event | Update id=439160628 is handled. Duration 107 ms by bot id=8256805438
+2026-01-02 15:01:59,111 | INFO | aiogram.event | Update id=439160629 is handled. Duration 97 ms by bot id=8256805438
+2026-01-02 15:02:00,983 | INFO | handlers.tasks | Task added: 1920657547
+2026-01-02 15:02:01,429 | INFO | aiogram.event | Update id=439160630 is handled. Duration 453 ms by bot id=8256805438
+2026-01-02 15:02:02,681 | INFO | aiogram.event | Update id=439160631 is handled. Duration 90 ms by bot id=8256805438
+2026-01-02 15:02:04,978 | INFO | aiogram.event | Update id=439160632 is handled. Duration 420 ms by bot id=8256805438
+2026-01-02 15:02:07,417 | INFO | aiogram.event | Update id=439160633 is handled. Duration 93 ms by bot id=8256805438
+2026-01-02 15:02:10,154 | INFO | aiogram.event | Update id=439160634 is handled. Duration 942 ms by bot id=8256805438
+2026-01-02 15:02:11,014 | WARNING | handlers.admin | Admin requested users list
+2026-01-02 15:02:11,110 | INFO | aiogram.event | Update id=439160635 is handled. Duration 97 ms by bot id=8256805438
+2026-01-02 15:02:12,259 | INFO | aiogram.event | Update id=439160636 is handled. Duration 99 ms by bot id=8256805438
+2026-01-02 15:10:18,520 | INFO | __main__ | Bot starting
+2026-01-02 15:10:18,662 | INFO | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-02 15:10:18,663 | INFO | apscheduler.scheduler | Added job "send_daily" to job store "default"
+2026-01-02 15:10:18,663 | INFO | apscheduler.scheduler | Scheduler started
+2026-01-02 15:10:18,663 | INFO | aiogram.dispatcher | Start polling
+2026-01-02 15:10:19,215 | INFO | aiogram.dispatcher | Run polling for bot @kntr_test_bot id=8256805438 - 'kntr_test_bot'
+2026-01-02 15:10:25,010 | INFO | aiogram.event | Update id=439160637 is handled. Duration 550 ms by bot id=8256805438
+2026-01-02 15:10:26,517 | INFO | aiogram.event | Update id=439160638 is handled. Duration 423 ms by bot id=8256805438
+2026-01-02 15:10:27,813 | INFO | aiogram.event | Update id=439160639 is handled. Duration 96 ms by bot id=8256805438
+2026-01-02 15:10:32,007 | INFO | handlers.tasks | Task added: 1920657547
+2026-01-02 15:10:32,097 | INFO | aiogram.event | Update id=439160640 is handled. Duration 95 ms by bot id=8256805438
+2026-01-02 15:10:38,908 | INFO | aiogram.event | Update id=439160641 is handled. Duration 131 ms by bot id=8256805438
+2026-01-02 15:10:49,817 | INFO | aiogram.event | Update id=439160642 is handled. Duration 128 ms by bot id=8256805438
+2026-01-02 15:10:55,328 | INFO | handlers.tasks | Task added: 1920657547
+2026-01-02 15:10:55,426 | INFO | aiogram.event | Update id=439160643 is handled. Duration 103 ms by bot id=8256805438
+2026-01-02 15:10:57,175 | INFO | aiogram.event | Update id=439160644 is handled. Duration 405 ms by bot id=8256805438
+2026-01-02 15:10:58,886 | INFO | aiogram.event | Update id=439160645 is handled. Duration 87 ms by bot id=8256805438
