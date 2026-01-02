@@ -59,19 +59,19 @@ async def show_tasks(cb: CallbackQuery):
         tasks = await cursor.fetchall()
 
     if not tasks:
-        text = "✅ Дел нет"
-        keyboard = main_menu(cb.from_user.id)
-        await safe_edit(cb, text, keyboard)
+        await safe_edit(cb, "✅ Дел нет", reply_markup=main_menu(cb.from_user.id))
         return
 
     text = "📋 Текущие дела:\n\n"
 
-    keyboard_buttons = []
+    # 🔥 Настройки кнопок
+    keyboard = []
     row = []
-    COLUMNS = 3  # 🔥 Количество кнопок в ряд
+    COLUMNS = 3  # количество кнопок в одном ряду
 
     for idx, (task_id, title) in enumerate(tasks, start=1):
         text += f"{idx}. {title}\n"
+
         row.append(
             InlineKeyboardButton(
                 text=f"✅ {idx}",
@@ -80,16 +80,17 @@ async def show_tasks(cb: CallbackQuery):
         )
 
         if len(row) == COLUMNS:
-            keyboard_buttons.append(row)
+            keyboard.append(row)
             row = []
 
     if row:
-        keyboard_buttons.append(row)
+        keyboard.append(row)
 
     # Кнопка "Выполнить все"
-    keyboard_buttons.append([InlineKeyboardButton(text="🗑 Выполнить все", callback_data="complete_all")])
-    # Кнопка "В меню"
-    keyboard_buttons.append([InlineKeyboardButton(text="⬅️ В меню", callback_data="menu")])
+    keyboard.append([InlineKeyboardButton(text="🗑 Выполнить все", callback_data="complete_all")])
 
-    keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
-    await safe_edit(cb, text, keyboard)
+    # Кнопка "В меню"
+    keyboard.append([InlineKeyboardButton(text="⬅️ В меню", callback_data="menu")])
+
+    # Используем safe_edit, чтобы избежать ошибки Telegram
+    await safe_edit(cb, text, InlineKeyboardMarkup(inline_keyboard=keyboard))

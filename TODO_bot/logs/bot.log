@@ -915,3 +915,105 @@ Traceback (most recent call last):
   File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\client\session\base.py", line 121, in check_response
     raise TelegramBadRequest(method=method, message=description)
 aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+2026-01-02 16:05:05,854 | INFO | __main__ | Bot starting
+2026-01-02 16:05:06,009 | INFO | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-02 16:05:06,009 | INFO | apscheduler.scheduler | Added job "send_daily" to job store "default"
+2026-01-02 16:05:06,009 | INFO | apscheduler.scheduler | Scheduler started
+2026-01-02 16:05:06,010 | INFO | aiogram.dispatcher | Start polling
+2026-01-02 16:05:07,521 | INFO | aiogram.dispatcher | Run polling for bot @kntr_test_bot id=8256805438 - 'kntr_test_bot'
+2026-01-02 16:05:09,916 | INFO | aiogram.event | Update id=439160716 is not handled. Duration 319 ms by bot id=8256805438
+2026-01-02 16:05:09,916 | ERROR | aiogram.event | Cause exception while process update id=439160716 by bot id=8256805438
+TelegramBadRequest: Telegram server says - Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+Traceback (most recent call last):
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 320, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 164, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 27, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 58, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\fsm\middleware.py", line 43, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 283, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\router.py", line 189, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\router.py", line 181, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\TODO_bot\handlers\tasks.py", line 64, in show_tasks
+    await safe_edit(cb, text, keyboard)
+  File "C:\Users\user\source\repos\TODO_bot\TODO_bot\utils\safe_edit.py", line 9, in safe_edit
+    await cb.message.edit_text(text, reply_markup=reply_markup)
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\methods\base.py", line 84, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\client\bot.py", line 485, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 177, in make_request
+    response = self.check_response(
+        bot=bot,
+    ...<2 lines>...
+        content=raw_result,
+    )
+  File "C:\Users\user\source\repos\TODO_bot\venv\Lib\site-packages\aiogram\client\session\base.py", line 121, in check_response
+    raise TelegramBadRequest(method=method, message=description)
+aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+2026-01-02 16:05:18,853 | INFO | aiogram.dispatcher | Polling stopped
+2026-01-02 16:05:18,855 | ERROR | aiogram.dispatcher | Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-01-02 16:05:18,855 | WARNING | aiogram.dispatcher | Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8256805438)
+2026-01-02 16:05:19,112 | INFO | aiogram.dispatcher | Polling stopped for bot @kntr_test_bot id=8256805438 - 'kntr_test_bot'
+2026-01-02 16:08:03,807 | INFO | __main__ | Bot starting
+2026-01-02 16:08:03,954 | INFO | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-01-02 16:08:03,954 | INFO | apscheduler.scheduler | Added job "send_daily" to job store "default"
+2026-01-02 16:08:03,954 | INFO | apscheduler.scheduler | Scheduler started
+2026-01-02 16:08:03,955 | INFO | aiogram.dispatcher | Start polling
+2026-01-02 16:08:05,878 | INFO | aiogram.dispatcher | Run polling for bot @kntr_test_bot id=8256805438 - 'kntr_test_bot'
+2026-01-02 16:08:08,003 | INFO | aiogram.event | Update id=439160717 is handled. Duration 244 ms by bot id=8256805438
+2026-01-02 16:08:18,069 | INFO | aiogram.event | Update id=439160718 is handled. Duration 355 ms by bot id=8256805438
+2026-01-02 16:09:48,212 | INFO | aiogram.event | Update id=439160719 is handled. Duration 97 ms by bot id=8256805438
