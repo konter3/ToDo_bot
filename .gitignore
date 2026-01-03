@@ -3,3 +3,5 @@ venv_start.bat
 .git/
 .vs/
 venv/
+config.py
+.gitignore

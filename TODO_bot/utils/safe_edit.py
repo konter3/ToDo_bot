@@ -2,12 +2,16 @@
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup
 
 async def safe_edit(cb: CallbackQuery, text: str, reply_markup: InlineKeyboardMarkup = None):
-    """Редактирует сообщение только если есть изменения, чтобы не было ошибки Telegram."""
+    """Редактирует сообщение только если есть изменения"""
     try:
-        # Telegram кидает ошибку, если текст и клавиатура не изменились
+        current_text = cb.message.text or ""
+        current_markup = cb.message.reply_markup
+
+        if text == current_text and reply_markup == current_markup:
+            return  # не трогаем сообщение, чтобы Telegram не ругался
+
         await cb.message.edit_text(text, reply_markup=reply_markup)
     except Exception as e:
-        # Игнорируем ошибку "message is not modified"
         if "message is not modified" in str(e):
             return
         raise
