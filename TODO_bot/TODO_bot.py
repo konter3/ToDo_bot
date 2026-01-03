@@ -9,7 +9,7 @@ from config import BOT_TOKEN
 from logging_config import setup_logging
 from database.db import init_db
 
-from handlers import cancel, complete_task, start, tasks, completed, admin, menu
+from handlers import cancel, checklists_create, complete_task, show_checklists, start, tasks, completed, admin, menu
 from scheduler.daily import send_daily
 
 setup_logging()
@@ -27,6 +27,8 @@ async def main():
         dp.include_router(cancel.router)
         dp.include_router(start.router)
         dp.include_router(tasks.router)
+        dp.include_router(checklists_create.router)
+        dp.include_router(show_checklists.router)
         dp.include_router(completed.router)
         dp.include_router(complete_task.router)
         dp.include_router(admin.router)
