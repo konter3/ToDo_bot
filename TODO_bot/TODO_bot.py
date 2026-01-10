@@ -9,8 +9,8 @@ from config import BOT_TOKEN
 from logging_config import setup_logging
 from database.db import init_db
 
-from handlers import cancel, checklists_create, complete_task, show_checklists, start, tasks, completed, admin, menu
-from scheduler.daily import send_daily
+from handlers import cancel, checklists_create, complete_task, show_checklists, start, tasks, completed, admin, menu, reminders
+from scheduler.daily import send_due
 
 setup_logging()
 logger = logging.getLogger(__name__)
@@ -33,16 +33,16 @@ async def main():
         dp.include_router(complete_task.router)
         dp.include_router(admin.router)
         dp.include_router(menu.router)
+        dp.include_router(reminders.router)
 
         scheduler = AsyncIOScheduler(timezone="Europe/Moscow")
 
         scheduler.add_job(
-            send_daily,
+            send_due,
             trigger="cron",
-            hour=10,
-            minute=0,
+            minute="*",
             args=[bot],
-            id="daily_tasks",
+            id="reminder_tick",
             replace_existing=True
         )
 

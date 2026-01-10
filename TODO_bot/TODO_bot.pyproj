@@ -25,15 +25,20 @@
     <Compile Include="database\db.py" />
     <Compile Include="handlers\admin.py" />
     <Compile Include="handlers\cancel.py" />
+    <Compile Include="handlers\checklist.py" />
+    <Compile Include="handlers\show_checklists.py" />
+    <Compile Include="handlers\checklists_create.py" />
     <Compile Include="handlers\completed.py" />
     <Compile Include="handlers\complete_task.py" />
     <Compile Include="handlers\menu.py" />
     <Compile Include="handlers\start.py" />
     <Compile Include="handlers\states.py" />
     <Compile Include="handlers\tasks.py" />
+    <Compile Include="keyboards\checklists.py" />
     <Compile Include="keyboards\inline.py" />
     <Compile Include="logging_config.py" />
     <Compile Include="scheduler\daily.py" />
+    <Compile Include="states\checklist.py" />
     <Compile Include="TODO_bot.py" />
     <Compile Include="utils\safe_edit.py" />
   </ItemGroup>
@@ -46,6 +51,7 @@
     <Folder Include="database\" />
     <Folder Include="handlers\" />
     <Folder Include="keyboards\" />
+    <Folder Include="states\" />
     <Folder Include="utils\" />
     <Folder Include="scheduler\" />
   </ItemGroup>

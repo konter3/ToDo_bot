@@ -7,6 +7,7 @@ def main_menu(user_id: int):
         [InlineKeyboardButton(text="📋 Текущие дела", callback_data="show_tasks")],
         [InlineKeyboardButton(text="➕ Добавить дело", callback_data="add_task")],
         [InlineKeyboardButton(text="✅ Выполненные дела", callback_data="done_tasks")],
+        [InlineKeyboardButton(text="⏰ Ежедневное напоминание", callback_data="daily_reminder_settings")],
         [InlineKeyboardButton(text="🗂 Чек-листы", callback_data="checklists")]
     ]
 
