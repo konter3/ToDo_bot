@@ -4,6 +4,7 @@ from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardBut
 import aiosqlite
 from config import DB_NAME
 from utils.safe_edit import safe_edit
+
 import logging
 
 router = Router()
@@ -67,8 +68,12 @@ async def done_tasks(cb: CallbackQuery):
     tasks, total_count = await get_completed_tasks(cb.from_user.id, page)
 
     if not tasks:
-        await safe_edit(cb, "❌ Выполненных дел нет", reply_markup=None)
+        keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="⬅️ В меню", callback_data="menu")]
+        ])
+        await safe_edit(cb, "✅ Выполненных дел пока нет.", reply_markup=keyboard)
         return
+
 
     text = "✅ Выполненные дела:\n\n"
     for _, title, date in tasks:

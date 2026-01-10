@@ -26,6 +26,7 @@
     <Compile Include="handlers\admin.py" />
     <Compile Include="handlers\cancel.py" />
     <Compile Include="handlers\checklist.py" />
+    <Compile Include="handlers\reminders.py" />
     <Compile Include="handlers\show_checklists.py" />
     <Compile Include="handlers\checklists_create.py" />
     <Compile Include="handlers\completed.py" />

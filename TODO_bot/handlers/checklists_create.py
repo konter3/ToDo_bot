@@ -52,7 +52,14 @@ async def checklist_title(message: Message, state: FSMContext):
 @router.message(ChecklistFSM.items)
 async def checklist_items(message: Message, state: FSMContext):
     if not message.text:  # Проверка на текст
-        await message.answer("❌ Пожалуйста, вводите пункты чек-листа только текстом, без медиа.")
+        await message.answer(
+            "📋 Введите пункты чек-листа\n"
+            "Каждый пункт — с новой строки\n\n"
+            "Пример:\n"
+            "Купить молоко\n"
+            "Позвонить маме\n"
+            "Записаться к врачу"
+        )
         return
 
     data = await state.get_data()
