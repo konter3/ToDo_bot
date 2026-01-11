@@ -11,6 +11,16 @@ import logging
 from config import DB_NAME
 from keyboards.inline import main_menu, cancel_task
 
+from texts import (
+    ADD_TASK_NOT_TEXT,
+    ADD_TASK_PROMPT,
+    ADD_TASK_SAVED,
+    BTN_COMPLETE_ALL,
+    BTN_MENU,
+    TASKS_EMPTY,
+    TASKS_HEADER,
+)
+
 router = Router()
 logger = logging.getLogger(__name__)
 
@@ -18,7 +28,7 @@ logger = logging.getLogger(__name__)
 async def add_task(cb: CallbackQuery, state: FSMContext):
     await state.set_state(AddTask.waiting_for_text)
     await cb.message.edit_text(
-        "✏️ Введите новое дело:",
+        ADD_TASK_PROMPT,
         reply_markup=cancel_task()
     )
 
@@ -36,17 +46,13 @@ async def save_task(message: Message, state: FSMContext):
     logger.info(f"Task added: {message.from_user.id}")
 
     await message.answer(
-        "✅ Дело добавлено",
+        ADD_TASK_SAVED,
         reply_markup=main_menu(message.from_user.id)
     )
 
 @router.message(AddTask.waiting_for_text)
 async def add_task_not_text(message: Message):
-    await message.answer(
-        "❌ Пожалуйста, отправьте текстовое сообщение.\n"
-        "Фото, видео и файлы не принимаются.",
-        reply_markup=cancel_task()
-    )
+    await message.answer(ADD_TASK_NOT_TEXT, reply_markup=cancel_task())
 
 
 @router.callback_query(F.data == "show_tasks")
@@ -59,10 +65,10 @@ async def show_tasks(cb: CallbackQuery):
         tasks = await cursor.fetchall()
 
     if not tasks:
-        await safe_edit(cb, "✅ Дел нет", reply_markup=main_menu(cb.from_user.id))
+        await safe_edit(cb, TASKS_EMPTY, reply_markup=main_menu(cb.from_user.id))
         return
 
-    text = "📋 Текущие дела:\n\n"
+    text = TASKS_HEADER
 
     # 🔥 Настройки кнопок
     keyboard = []
@@ -87,10 +93,10 @@ async def show_tasks(cb: CallbackQuery):
         keyboard.append(row)
 
     # Кнопка "Выполнить все"
-    keyboard.append([InlineKeyboardButton(text="🗑 Выполнить все", callback_data="complete_all")])
+    keyboard.append([InlineKeyboardButton(text=BTN_COMPLETE_ALL, callback_data="complete_all")])
 
     # Кнопка "В меню"
-    keyboard.append([InlineKeyboardButton(text="⬅️ В меню", callback_data="menu")])
+    keyboard.append([InlineKeyboardButton(text=BTN_MENU, callback_data="menu")])
 
     # Используем safe_edit, чтобы избежать ошибки Telegram
     await safe_edit(cb, text, InlineKeyboardMarkup(inline_keyboard=keyboard))

@@ -5,6 +5,7 @@ import logging
 
 from config import DB_NAME, ADMIN_ID
 from keyboards.inline import back_menu
+from texts import NO_ACCESS, USERS_HEADER
 
 router = Router()
 logger = logging.getLogger(__name__)
@@ -12,7 +13,7 @@ logger = logging.getLogger(__name__)
 @router.callback_query(lambda c: c.data == "users")
 async def users(cb: CallbackQuery):
     if cb.from_user.id != ADMIN_ID:
-        await cb.answer("⛔ Нет доступа", show_alert=True)
+        await cb.answer(NO_ACCESS, show_alert=True)
         return
 
     async with aiosqlite.connect(DB_NAME) as db:
@@ -23,7 +24,7 @@ async def users(cb: CallbackQuery):
 
     logger.warning("Admin requested users list")
 
-    text = "👑 Пользователи:\n\n"
+    text = USERS_HEADER
     for uid, username, name in users:
         text += f"👤 {name} | @{username} | {uid}\n"
 

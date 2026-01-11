@@ -12,6 +12,20 @@ from config import DB_NAME
 from handlers.checklist import render_checklists
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
+from texts import (
+    BTN_ADD_CHECKLIST,
+    BTN_MENU,
+    CHECKLIST_CREATE_CANCELED,
+    CHECKLIST_ITEMS_MIN_1,
+    CHECKLIST_ITEMS_NOT_TEXT,
+    CHECKLIST_ITEMS_PROMPT,
+    CHECKLISTS_EMPTY,
+    CHECKLISTS_HEADER,
+    CHECKLIST_TITLE_EMPTY,
+    CHECKLIST_TITLE_NOT_TEXT,
+    CHECKLIST_TITLE_PROMPT,
+)
+
 router = Router()
 
 
@@ -21,7 +35,7 @@ async def start_create_checklist(cb: CallbackQuery, state: FSMContext):
     await state.set_state(ChecklistFSM.title)
 
     await cb.message.edit_text(
-        "Введите название чек-листа:",
+        CHECKLIST_TITLE_PROMPT,
         reply_markup=cancel_checklist_kb()
     )
     await cb.answer()
@@ -30,36 +44,24 @@ async def start_create_checklist(cb: CallbackQuery, state: FSMContext):
 @router.message(ChecklistFSM.title)
 async def checklist_title(message: Message, state: FSMContext):
     if not message.text:  # Проверяем, что сообщение текстовое
-        await message.answer("❌ Пожалуйста, введите название чек-листа текстом, без медиа.")
+        await message.answer(CHECKLIST_TITLE_NOT_TEXT)
         return
 
     title = message.text.strip()
     if not title:
-        await message.answer("❌ Название не может быть пустым. Введите текст.")
+        await message.answer(CHECKLIST_TITLE_EMPTY)
         return
 
     await state.update_data(title=title)
     await state.set_state(ChecklistFSM.items)
 
-    await message.answer(
-        "📝 Введите пункты чек-листа.\n\n"
-        "Каждый пункт — с новой строки.\n"
-        "Когда закончите, отправьте сообщение.",
-        reply_markup=cancel_checklist_kb()
-    )
+    await message.answer(CHECKLIST_ITEMS_PROMPT, reply_markup=cancel_checklist_kb())
 
 
 @router.message(ChecklistFSM.items)
 async def checklist_items(message: Message, state: FSMContext):
     if not message.text:  # Проверка на текст
-        await message.answer(
-            "📋 Введите пункты чек-листа\n"
-            "Каждый пункт — с новой строки\n\n"
-            "Пример:\n"
-            "Купить молоко\n"
-            "Позвонить маме\n"
-            "Записаться к врачу"
-        )
+        await message.answer(CHECKLIST_ITEMS_NOT_TEXT)
         return
 
     data = await state.get_data()
@@ -67,7 +69,7 @@ async def checklist_items(message: Message, state: FSMContext):
 
     items = [line.strip() for line in message.text.split("\n") if line.strip()]
     if not items:
-        await message.answer("❌ Нужно минимум 1 пункт")
+        await message.answer(CHECKLIST_ITEMS_MIN_1)
         return
 
     async with aiosqlite.connect(DB_NAME) as db:
@@ -95,22 +97,22 @@ async def checklist_items(message: Message, state: FSMContext):
         rows = await cursor.fetchall()
 
     if not rows:
-        text = "📋 У вас пока нет чек-листов"
+        text = CHECKLISTS_EMPTY
         keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
-                [InlineKeyboardButton(text="➕ Добавить чек-лист", callback_data="add_checklist")],
-                [InlineKeyboardButton(text="⬅️ В меню", callback_data="menu")]
+                [InlineKeyboardButton(text=BTN_ADD_CHECKLIST, callback_data="add_checklist")],
+                [InlineKeyboardButton(text=BTN_MENU, callback_data="menu")]
             ]
         )
     else:
-        text = "📋 Ваши чек-листы:"
+        text = CHECKLISTS_HEADER
         keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
                 [InlineKeyboardButton(text=title, callback_data=f"checklist:{checklist_id}")]
                 for checklist_id, title in rows
             ] + [
-                [InlineKeyboardButton(text="➕ Добавить чек-лист", callback_data="add_checklist")],
-                [InlineKeyboardButton(text="⬅️ В меню", callback_data="menu")]
+                [InlineKeyboardButton(text=BTN_ADD_CHECKLIST, callback_data="add_checklist")],
+                [InlineKeyboardButton(text=BTN_MENU, callback_data="menu")]
             ]
         )
 
@@ -122,7 +124,7 @@ async def cancel_checklist_handler(cb: CallbackQuery, state: FSMContext):
     await state.clear()
 
     await cb.message.edit_text(
-        "❌ Создание чек-листа отменено",
+        CHECKLIST_CREATE_CANCELED,
         reply_markup=main_menu(cb.from_user.id)
     )
     await cb.answer()

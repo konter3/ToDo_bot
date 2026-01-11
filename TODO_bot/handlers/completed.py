@@ -4,8 +4,21 @@ from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardBut
 import aiosqlite
 from config import DB_NAME
 from utils.safe_edit import safe_edit
-
 import logging
+
+from texts import (
+    BTN_BACK,
+    BTN_CLEAR_HISTORY,
+    BTN_MENU,
+    BTN_NEXT,
+    BTN_CANCEL,
+    BTN_YES,
+    DONE_TASKS_CLEAR_CONFIRM,
+    DONE_TASKS_CLEAR_FAILED,
+    DONE_TASKS_CLEARED,
+    DONE_TASKS_EMPTY,
+    DONE_TASKS_HEADER,
+)
 
 router = Router()
 logger = logging.getLogger(__name__)
@@ -39,20 +52,20 @@ async def build_keyboard(page: int, total_count: int):
     nav_row = []
     if page > 1:
         nav_row.append(
-            InlineKeyboardButton(text="⬅️ Назад", callback_data=f"done_tasks::{page-1}")
+            InlineKeyboardButton(text=BTN_BACK, callback_data=f"done_tasks::{page-1}")
         )
     if page * PAGE_SIZE < total_count:
         nav_row.append(
-            InlineKeyboardButton(text="➡️ Вперед", callback_data=f"done_tasks::{page+1}")
+            InlineKeyboardButton(text=BTN_NEXT, callback_data=f"done_tasks::{page+1}")
         )
     if nav_row:
         kb.append(nav_row)
 
     # Очистка истории
-    kb.append([InlineKeyboardButton(text="🗑 Очистить историю", callback_data=f"clear_completed::{page}")])
+    kb.append([InlineKeyboardButton(text=BTN_CLEAR_HISTORY, callback_data=f"clear_completed::{page}")])
 
     # Назад в меню
-    kb.append([InlineKeyboardButton(text="⬅️ В меню", callback_data="menu")])
+    kb.append([InlineKeyboardButton(text=BTN_MENU, callback_data="menu")])
 
     return InlineKeyboardMarkup(inline_keyboard=kb)
 
@@ -68,14 +81,14 @@ async def done_tasks(cb: CallbackQuery):
     tasks, total_count = await get_completed_tasks(cb.from_user.id, page)
 
     if not tasks:
-        keyboard = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="⬅️ В меню", callback_data="menu")]
-        ])
-        await safe_edit(cb, "✅ Выполненных дел пока нет.", reply_markup=keyboard)
+        # Даже если список пустой — даём пользователю выход обратно в меню.
+        keyboard = InlineKeyboardMarkup(
+            inline_keyboard=[[InlineKeyboardButton(text=BTN_MENU, callback_data="menu")]]
+        )
+        await safe_edit(cb, DONE_TASKS_EMPTY, reply_markup=keyboard)
         return
 
-
-    text = "✅ Выполненные дела:\n\n"
+    text = DONE_TASKS_HEADER
     for _, title, date in tasks:
         text += f"• {title}\n🕒 {date}\n\n"
 
@@ -94,11 +107,11 @@ async def clear_completed(cb: CallbackQuery):
     # Подтверждение очистки
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text="✅ Да", callback_data=f"clear_completed_confirm::{page}"),
-            InlineKeyboardButton(text="❌ Отмена", callback_data=f"done_tasks::{page}")
+            InlineKeyboardButton(text=BTN_YES, callback_data=f"clear_completed_confirm::{page}"),
+            InlineKeyboardButton(text=BTN_CANCEL, callback_data=f"done_tasks::{page}")
         ]
     ])
-    await safe_edit(cb, "⚠️ Вы уверены, что хотите очистить всю историю выполненных дел?", keyboard)
+    await safe_edit(cb, DONE_TASKS_CLEAR_CONFIRM, keyboard)
 
 
 @router.callback_query(F.data.startswith("clear_completed_confirm"))
@@ -111,7 +124,13 @@ async def confirm_clear(cb: CallbackQuery):
             )
             await db.commit()
         logger.info(f"Completed tasks cleared for user {cb.from_user.id}")
-        await safe_edit(cb, "✅ История выполненных дел очищена", reply_markup=None)
+        keyboard = InlineKeyboardMarkup(
+            inline_keyboard=[[InlineKeyboardButton(text=BTN_MENU, callback_data="menu")]]
+        )
+        await safe_edit(cb, DONE_TASKS_CLEARED, reply_markup=keyboard)
     except Exception as e:
         logger.error(f"Failed to clear completed tasks for user {cb.from_user.id}: {e}")
-        await safe_edit(cb, "❌ Не удалось очистить историю", reply_markup=None)
+        keyboard = InlineKeyboardMarkup(
+            inline_keyboard=[[InlineKeyboardButton(text=BTN_MENU, callback_data="menu")]]
+        )
+        await safe_edit(cb, DONE_TASKS_CLEAR_FAILED, reply_markup=keyboard)

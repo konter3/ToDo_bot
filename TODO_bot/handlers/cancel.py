@@ -5,6 +5,8 @@ from keyboards.inline import main_menu
 import aiosqlite
 import logging
 
+from texts import ADD_TASK_CANCELED
+
 router = Router()
 logger = logging.getLogger(__name__)
 
@@ -12,6 +14,6 @@ logger = logging.getLogger(__name__)
 async def cancel_add_task(cb: CallbackQuery, state: FSMContext):
     await state.clear()
     await cb.message.edit_text(
-        "❌ Добавление дела отменено",
+        ADD_TASK_CANCELED,
         reply_markup=main_menu(cb.from_user.id)
     )

@@ -6,6 +6,35 @@ import aiosqlite
 from config import DB_NAME
 from handlers.states import ChecklistReminder
 
+from texts import (
+    BTN_ADD_CHECKLIST,
+    BTN_BACK,
+    BTN_CHECKLIST_BACK_TO_LIST,
+    BTN_CHECKLIST_DELETE,
+    BTN_CHECKLIST_REMINDERS,
+    BTN_CHECKLIST_OPEN_REMINDERS,
+    BTN_CL_DISABLE,
+    BTN_CL_DONT_SEND,
+    BTN_CL_MODE_DAILY,
+    BTN_CL_MODE_ONCE,
+    BTN_MENU,
+    CHECKLIST_NOT_FOUND,
+    CHECKLISTS_EMPTY,
+    CHECKLISTS_HEADER,
+    CHECKLIST_DELETED,
+    CL_DISABLED_SHORT,
+    SETTINGS_SAVED,
+    TIME_INPUT_BAD,
+    TIME_INPUT_PROMPT,
+    CL_REMINDER_MENU,
+    CL_INFO_DAILY,
+    CL_INFO_OFF,
+    CL_INFO_ONCE_AT,
+    CL_INFO_ONCE_SENT,
+    CL_PROMPT_DAILY,
+    CL_PROMPT_ONCE,
+)
+
 router = Router()
 
 
@@ -20,22 +49,22 @@ async def show_checklists(cb: CallbackQuery):
         rows = await cursor.fetchall()
 
     if not rows:
-        text = "📋 У вас пока нет чек-листов"
+        text = CHECKLISTS_EMPTY
         keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
-                [InlineKeyboardButton(text="➕ Добавить чек-лист", callback_data="add_checklist")],
-                [InlineKeyboardButton(text="⬅️ В меню", callback_data="menu")]
+                [InlineKeyboardButton(text=BTN_ADD_CHECKLIST, callback_data="add_checklist")],
+                [InlineKeyboardButton(text=BTN_MENU, callback_data="menu")]
             ]
         )
     else:
-        text = "📋 Ваши чек-листы:"
+        text = CHECKLISTS_HEADER
         keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
                 [InlineKeyboardButton(text=title, callback_data=f"checklist:{checklist_id}")]
                 for checklist_id, title in rows
             ] + [
-                [InlineKeyboardButton(text="➕ Добавить чек-лист", callback_data="add_checklist")],
-                [InlineKeyboardButton(text="⬅️ В меню", callback_data="menu")]
+                [InlineKeyboardButton(text=BTN_ADD_CHECKLIST, callback_data="add_checklist")],
+                [InlineKeyboardButton(text=BTN_MENU, callback_data="menu")]
             ]
         )
 
@@ -71,9 +100,9 @@ async def open_checklist(cb: CallbackQuery):
                 )
             ] for item_id, title, completed in items
         ] + [
-            [InlineKeyboardButton(text="⏰ Напоминания", callback_data=f"checklist_reminder_menu:{checklist_id}")],
-            [InlineKeyboardButton(text="🗑️ Удалить чек-лист", callback_data=f"delete_checklist:{checklist_id}")],
-            [InlineKeyboardButton(text="⬅️ Назад к списку чек-листов", callback_data="checklists")]
+            [InlineKeyboardButton(text=BTN_CHECKLIST_REMINDERS, callback_data=f"checklist_reminder_menu:{checklist_id}")],
+            [InlineKeyboardButton(text=BTN_CHECKLIST_DELETE, callback_data=f"delete_checklist:{checklist_id}")],
+            [InlineKeyboardButton(text=BTN_CHECKLIST_BACK_TO_LIST, callback_data="checklists")]
         ]
     )
 
@@ -110,14 +139,14 @@ async def toggle_checklist_item(cb: CallbackQuery):
 # --- Меню напоминаний чек-листа ---
 def _cl_reminder_kb(checklist_id: int, enabled: bool):
     buttons = [
-        [InlineKeyboardButton(text="📅 Ежедневно в ...", callback_data=f"cl_set_mode_daily:{checklist_id}")],
-        [InlineKeyboardButton(text="⏱ Один раз в ...", callback_data=f"cl_set_mode_once:{checklist_id}")],
+        [InlineKeyboardButton(text=BTN_CL_MODE_DAILY, callback_data=f"cl_set_mode_daily:{checklist_id}")],
+        [InlineKeyboardButton(text=BTN_CL_MODE_ONCE, callback_data=f"cl_set_mode_once:{checklist_id}")],
     ]
     if enabled:
-        buttons.append([InlineKeyboardButton(text="🔕 Выключить напоминания", callback_data=f"cl_disable:{checklist_id}")])
+        buttons.append([InlineKeyboardButton(text=BTN_CL_DISABLE, callback_data=f"cl_disable:{checklist_id}")])
     else:
-        buttons.append([InlineKeyboardButton(text="🚫 Не присылать", callback_data=f"cl_disable:{checklist_id}")])
-    buttons.append([InlineKeyboardButton(text="⬅️ Назад", callback_data=f"checklist:{checklist_id}")])
+        buttons.append([InlineKeyboardButton(text=BTN_CL_DONT_SEND, callback_data=f"cl_disable:{checklist_id}")])
+    buttons.append([InlineKeyboardButton(text=BTN_BACK, callback_data=f"checklist:{checklist_id}")])
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
 
@@ -134,23 +163,23 @@ async def checklist_reminder_menu(cb: CallbackQuery, state: FSMContext):
         row = await cur.fetchone()
 
     if not row:
-        await cb.answer("Чек-лист не найден", show_alert=True)
+        await cb.answer(CHECKLIST_NOT_FOUND, show_alert=True)
         return
 
     enabled, mode, time, once_at, once_sent = row
     enabled = int(enabled or 0)
     mode = mode or "off"
 
-    info = "выключено 🔕"
+    info = CL_INFO_OFF
     if enabled and mode == "daily":
-        info = f"ежедневно в {time or '??:??'} ✅"
+        info = CL_INFO_DAILY.format(time=(time or "??:??"))
     elif enabled and mode == "once":
         if once_sent:
-            info = f"один раз (уже отправлено) ✅"
+            info = CL_INFO_ONCE_SENT
         else:
-            info = f"один раз: {once_at or 'не задано'} ✅"
+            info = CL_INFO_ONCE_AT.format(once_at=(once_at or "не задано"))
 
-    text = f"⏰ Напоминания чек-листа\n\nТекущее: {info}\n\nВыберите режим:"
+    text = CL_REMINDER_MENU.format(info=info)
     await cb.message.edit_text(text, reply_markup=_cl_reminder_kb(checklist_id, bool(enabled)))
     await cb.answer()
 
@@ -166,7 +195,7 @@ async def cl_disable(cb: CallbackQuery, state: FSMContext):
         await db.commit()
 
     await checklist_reminder_menu(cb, state)
-    await cb.answer("🔕 Выключено")
+    await cb.answer(CL_DISABLED_SHORT)
 
 
 @router.callback_query(F.data.startswith("cl_set_mode_daily:"))
@@ -175,9 +204,9 @@ async def cl_set_mode_daily(cb: CallbackQuery, state: FSMContext):
     await state.set_state(ChecklistReminder.waiting_for_time)
     await state.update_data(checklist_id=checklist_id, mode="daily")
     await cb.message.edit_text(
-        "Введите время (HH:MM), в которое присылать чек-лист ежедневно.",
+        CL_PROMPT_DAILY,
         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="⬅️ Назад", callback_data=f"checklist_reminder_menu:{checklist_id}")]
+            [InlineKeyboardButton(text=BTN_BACK, callback_data=f"checklist_reminder_menu:{checklist_id}")]
         ])
     )
     await cb.answer()
@@ -189,9 +218,9 @@ async def cl_set_mode_once(cb: CallbackQuery, state: FSMContext):
     await state.set_state(ChecklistReminder.waiting_for_time)
     await state.update_data(checklist_id=checklist_id, mode="once")
     await cb.message.edit_text(
-        "Введите время (HH:MM), в которое прислать чек-лист ОДИН раз (ближайшее такое время).",
+        CL_PROMPT_ONCE,
         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="⬅️ Назад", callback_data=f"checklist_reminder_menu:{checklist_id}")]
+            [InlineKeyboardButton(text=BTN_BACK, callback_data=f"checklist_reminder_menu:{checklist_id}")]
         ])
     )
     await cb.answer()
@@ -200,7 +229,7 @@ async def cl_set_mode_once(cb: CallbackQuery, state: FSMContext):
 @router.message(ChecklistReminder.waiting_for_time)
 async def cl_time_message(message: Message, state: FSMContext):
     if not message.text:
-        await message.answer("❌ Введите время текстом в формате HH:MM.")
+        await message.answer(TIME_INPUT_PROMPT)
         return
 
     t = message.text.strip()
@@ -211,7 +240,7 @@ async def cl_time_message(message: Message, state: FSMContext):
             raise ValueError()
         t = f"{hh:02d}:{mm:02d}"
     except Exception:
-        await message.answer("❌ Неверный формат. Пример: 09:30")
+        await message.answer(TIME_INPUT_BAD)
         return
 
     data = await state.get_data()
@@ -244,9 +273,9 @@ async def cl_time_message(message: Message, state: FSMContext):
     # возвращаем в меню напоминаний
     fake_cb = type("FakeCb", (), {"from_user": message.from_user, "message": message, "answer": (lambda *a, **k: None)})
     # не используем fake_cb, просто показываем текст
-    await message.answer("✅ Готово. Настройки сохранены.", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="⏰ Открыть настройки напоминаний", callback_data=f"checklist_reminder_menu:{checklist_id}")],
-        [InlineKeyboardButton(text="⬅️ В меню", callback_data="menu")]
+    await message.answer(SETTINGS_SAVED, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=BTN_CHECKLIST_OPEN_REMINDERS, callback_data=f"checklist_reminder_menu:{checklist_id}")],
+        [InlineKeyboardButton(text=BTN_MENU, callback_data="menu")]
     ]))
 # --- Удаляем чек-лист ---
 @router.callback_query(F.data.startswith("delete_checklist:"))
@@ -259,5 +288,5 @@ async def delete_checklist(cb: CallbackQuery):
         await db.commit()
 
     await show_checklists(cb)
-    await cb.answer("🗑️ Чек-лист удалён")
+    await cb.answer(CHECKLIST_DELETED)
 

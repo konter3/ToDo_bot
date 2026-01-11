@@ -6,6 +6,8 @@ from keyboards.inline import main_menu
 from handlers.tasks import show_tasks
 from config import DB_NAME
 
+from texts import TASK_NOT_FOUND, TASK_DONE, TASKS_NONE_TO_COMPLETE, TASKS_ALL_DONE
+
 import aiosqlite
 import logging
 
@@ -26,7 +28,7 @@ async def complete_task(cb: CallbackQuery):
         row = await cursor.fetchone()
 
         if not row:
-            await cb.answer("❌ Задача не найдена", show_alert=True)
+            await cb.answer(TASK_NOT_FOUND, show_alert=True)
             return
 
         title = row[0]
@@ -44,7 +46,7 @@ async def complete_task(cb: CallbackQuery):
         )
         await db.commit()
 
-    await cb.answer("✅ Задача выполнена")
+    await cb.answer(TASK_DONE)
 
     # Обновляем список задач после выполнения
     await show_tasks(cb)
@@ -62,7 +64,7 @@ async def complete_all_tasks(cb: CallbackQuery):
         tasks = await cursor.fetchall()
 
         if not tasks:
-            await cb.answer("✅ Дел нет для выполнения", show_alert=True)
+            await cb.answer(TASKS_NONE_TO_COMPLETE, show_alert=True)
             return
 
         # Переносим все в completed
@@ -80,5 +82,5 @@ async def complete_all_tasks(cb: CallbackQuery):
         await db.commit()
 
     logger.info(f"All tasks completed for user {cb.from_user.id}")
-    await cb.answer("✅ Все задачи выполнены")
+    await cb.answer(TASKS_ALL_DONE)
     await show_tasks(cb)
