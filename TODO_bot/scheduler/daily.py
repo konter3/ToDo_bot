@@ -136,15 +136,19 @@ async def send_due(bot: Bot):
 
         # --- чек-листы: daily ---
         weekday = now.weekday()  # 0=Mon..6=Sun
+        mask_bit = (1 << weekday)
         cur = await db.execute(
             """SELECT id, user_id
                FROM checklists
                WHERE reminder_enabled=1
                  AND reminder_mode='daily'
                  AND reminder_time=?
-                 AND (reminder_weekday IS NULL OR reminder_weekday=?)
+                 AND (
+                       (reminder_weekdays_mask IS NOT NULL AND (reminder_weekdays_mask & ?) != 0)
+                    OR (reminder_weekdays_mask IS NULL AND (reminder_weekday IS NULL OR reminder_weekday=?))
+                 )
                  AND (last_sent_date IS NULL OR last_sent_date<>?)""",
-            (hhmm, weekday, today)
+            (hhmm, mask_bit, weekday, today)
         )
         daily_lists = await cur.fetchall()
 

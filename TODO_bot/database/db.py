@@ -104,6 +104,8 @@ async def init_db():
         await _ensure_column(db, "checklists", "reminder_enabled", "INTEGER", "0")
         # 0..6 (Mon..Sun) or NULL for every day (backward compatible)
         await _ensure_column(db, "checklists", "reminder_weekday", "INTEGER")
+        # Bitmask of weekdays for multi-select (1<<0 is Mon ... 1<<6 is Sun). NULL means "every day" (compat).
+        await _ensure_column(db, "checklists", "reminder_weekdays_mask", "INTEGER")
         await _ensure_column(db, "checklists", "last_sent_date", "TEXT")
         await _ensure_column(db, "checklists", "once_sent", "INTEGER", "0")
 

@@ -9,7 +9,7 @@ class DailyReminder(StatesGroup):
 
 class ChecklistReminder(StatesGroup):
     waiting_for_time = State()
-    waiting_for_weekday = State()
+    waiting_for_days = State()
 
 
 class ChecklistEdit(StatesGroup):

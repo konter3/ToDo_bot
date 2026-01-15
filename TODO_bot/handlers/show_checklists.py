@@ -36,6 +36,10 @@ from texts import (
     CL_PROMPT_DAILY,
     CL_PROMPT_ONCE,
     CL_PROMPT_WEEKDAY,
+    CL_DAYS_SELECTED,
+    CL_DAYS_NONE,
+    BTN_DONE,
+    BTN_EVERY_DAY,
     WEEKDAYS_SHORT,
     WEEKDAYS,
     CHECKLIST_EDIT_PROMPT,
@@ -208,13 +212,30 @@ def _cl_reminder_kb(checklist_id: int, enabled: bool):
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
 
-def _weekday_kb(checklist_id: int):
-    # NULL weekday means "every day" (backward compatible)
-    rows = [[InlineKeyboardButton(text="Каждый день", callback_data=f"cl_weekday:{checklist_id}:any")]]
-    rows += [
-        [InlineKeyboardButton(text=WEEKDAYS_SHORT[i], callback_data=f"cl_weekday:{checklist_id}:{i}")]
-        for i in range(7)
-    ]
+def _mask_to_days(mask: int) -> str:
+    days = [WEEKDAYS_SHORT[i] for i in range(7) if (mask & (1 << i))]
+    return ", ".join(days) if days else "—"
+
+
+def _weekdays_multi_kb(checklist_id: int, mask: int):
+    # mask: bitmask of selected weekdays (1<<0 is Mon ... 1<<6 is Sun). 0 means none.
+    rows = []
+
+    # Top row: every day shortcut
+    rows.append([InlineKeyboardButton(text=BTN_EVERY_DAY, callback_data=f"cl_days_all:{checklist_id}")])
+
+    # Days grid (2 columns)
+    day_buttons = []
+    for i in range(7):
+        checked = "✅ " if (mask & (1 << i)) else "▫️ "
+        day_buttons.append(InlineKeyboardButton(text=f"{checked}{WEEKDAYS_SHORT[i]}", callback_data=f"cl_days_toggle:{checklist_id}:{i}"))
+
+    for i in range(0, 6, 2):
+        rows.append([day_buttons[i], day_buttons[i + 1]])
+    rows.append([day_buttons[6]])
+
+    # Actions
+    rows.append([InlineKeyboardButton(text=BTN_DONE, callback_data=f"cl_days_done:{checklist_id}")])
     rows.append([InlineKeyboardButton(text=BTN_BACK, callback_data=f"checklist_reminder_menu:{checklist_id}")])
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
@@ -226,7 +247,7 @@ async def checklist_reminder_menu(cb: CallbackQuery, state: FSMContext):
 
     async with aiosqlite.connect(DB_NAME) as db:
         cur = await db.execute(
-            "SELECT reminder_enabled, reminder_mode, reminder_time, reminder_once_at, once_sent, reminder_weekday FROM checklists WHERE id=?",
+            "SELECT reminder_enabled, reminder_mode, reminder_time, reminder_once_at, once_sent, reminder_weekday, reminder_weekdays_mask FROM checklists WHERE id=?",
             (checklist_id,)
         )
         row = await cur.fetchone()
@@ -235,13 +256,16 @@ async def checklist_reminder_menu(cb: CallbackQuery, state: FSMContext):
         await cb.answer(CHECKLIST_NOT_FOUND, show_alert=True)
         return
 
-    enabled, mode, time, once_at, once_sent, wd = row
+    enabled, mode, time, once_at, once_sent, wd, wd_mask = row
     enabled = int(enabled or 0)
     mode = mode or "off"
 
     info = CL_INFO_OFF
     if enabled and mode == "daily":
-        if wd is None:
+        if wd_mask is not None:
+            days = _mask_to_days(int(wd_mask))
+            info = f"по дням: {days} в {(time or '??:??')} ✅"
+        elif wd is None:
             info = CL_INFO_DAILY.format(time=(time or "??:??"))
         else:
             info = CL_INFO_WEEKLY.format(weekday=WEEKDAYS[int(wd)], time=(time or "??:??"))
@@ -261,7 +285,7 @@ async def cl_disable(cb: CallbackQuery, state: FSMContext):
     checklist_id = int(cb.data.split(":")[1])
     async with aiosqlite.connect(DB_NAME) as db:
         await db.execute(
-            "UPDATE checklists SET reminder_enabled=0, reminder_mode='off', reminder_time=NULL, reminder_once_at=NULL, once_sent=0, reminder_weekday=NULL WHERE id=?",
+            "UPDATE checklists SET reminder_enabled=0, reminder_mode='off', reminder_time=NULL, reminder_once_at=NULL, once_sent=0, reminder_weekday=NULL, reminder_weekdays_mask=NULL WHERE id=?",
             (checklist_id,)
         )
         await db.commit()
@@ -320,63 +344,116 @@ async def cl_time_message(message: Message, state: FSMContext):
     checklist_id = int(data["checklist_id"])
     mode = data.get("mode", "daily")
 
-    # Ask weekday after time
-    await state.update_data(time=t, mode=mode)
-    await state.set_state(ChecklistReminder.waiting_for_weekday)
-    await message.answer(CL_PROMPT_WEEKDAY, reply_markup=_weekday_kb(checklist_id))
+    # Ask weekdays (multi-select) after time
+    await state.update_data(time=t, mode=mode, days_mask=0)
+    await state.set_state(ChecklistReminder.waiting_for_days)
+    await message.answer(
+        f"{CL_PROMPT_WEEKDAY}\n\n{CL_DAYS_NONE}",
+        reply_markup=_weekdays_multi_kb(checklist_id, 0),
+    )
 
 
-@router.callback_query(F.data.startswith("cl_weekday:"))
-async def cl_set_weekday(cb: CallbackQuery, state: FSMContext):
-    # cl_weekday:{checklist_id}:{weekday|any}
+@router.callback_query(F.data.startswith("cl_days_toggle:"))
+async def cl_days_toggle(cb: CallbackQuery, state: FSMContext):
+    # cl_days_toggle:{checklist_id}:{weekday}
     _, checklist_id_str, wd_str = cb.data.split(":")
     checklist_id = int(checklist_id_str)
+    try:
+        weekday = int(wd_str)
+    except Exception:
+        await cb.answer()
+        return
+    if not (0 <= weekday <= 6):
+        await cb.answer()
+        return
 
+    data = await state.get_data()
+    mask = int(data.get("days_mask", 0))
+    mask ^= (1 << weekday)
+    await state.update_data(days_mask=mask)
+
+    days_text = CL_DAYS_SELECTED.format(days=_mask_to_days(mask)) if mask else CL_DAYS_NONE
+    await cb.message.edit_text(
+        f"{CL_PROMPT_WEEKDAY}\n\n{days_text}",
+        reply_markup=_weekdays_multi_kb(checklist_id, mask),
+    )
+    await cb.answer()
+
+
+@router.callback_query(F.data.startswith("cl_days_all:"))
+async def cl_days_all(cb: CallbackQuery, state: FSMContext):
+    # cl_days_all:{checklist_id}
+    checklist_id = int(cb.data.split(":")[1])
+    mask = (1 << 7) - 1  # all days
+    await state.update_data(days_mask=mask)
+
+    days_text = CL_DAYS_SELECTED.format(days=_mask_to_days(mask))
+    await cb.message.edit_text(
+        f"{CL_PROMPT_WEEKDAY}\n\n{days_text}",
+        reply_markup=_weekdays_multi_kb(checklist_id, mask),
+    )
+    await cb.answer()
+
+
+def _next_occurrence_for_mask(now, hhmm: str, mask: int):
+    """Return datetime of the next occurrence at hhmm on one of selected weekdays."""
+    from datetime import timedelta
+
+    target_base = now.replace(hour=int(hhmm[:2]), minute=int(hhmm[3:]), second=0, microsecond=0)
+    best = None
+    for wd in range(7):
+        if not (mask & (1 << wd)):
+            continue
+        days_ahead = (wd - now.weekday()) % 7
+        cand = target_base + timedelta(days=days_ahead)
+        if cand <= now:
+            cand = cand + timedelta(days=7)
+        if best is None or cand < best:
+            best = cand
+    return best
+
+
+@router.callback_query(F.data.startswith("cl_days_done:"))
+async def cl_days_done(cb: CallbackQuery, state: FSMContext):
+    # cl_days_done:{checklist_id}
+    checklist_id = int(cb.data.split(":")[1])
     data = await state.get_data()
     mode = data.get("mode", "daily")
     t = data.get("time")
+    mask = int(data.get("days_mask", 0))
     if not t:
         await cb.answer("Время не задано", show_alert=True)
         return
-
-    weekday: int | None
-    if wd_str == "any":
-        weekday = None
-    else:
-        try:
-            weekday = int(wd_str)
-            if not (0 <= weekday <= 6):
-                weekday = None
-        except Exception:
-            weekday = None
+    if mask == 0:
+        await cb.answer("Выберите хотя бы один день", show_alert=True)
+        return
 
     async with aiosqlite.connect(DB_NAME) as db:
         if mode == "daily":
+            # NULL mask means "every day" (compat). We store explicit mask for selected days.
+            store_mask = None if mask == ((1 << 7) - 1) else mask
             await db.execute(
-                "UPDATE checklists SET reminder_enabled=1, reminder_mode='daily', reminder_time=?, reminder_weekday=?, reminder_once_at=NULL, once_sent=0, last_sent_date=NULL WHERE id=?",
-                (t, weekday, checklist_id),
+                "UPDATE checklists SET reminder_enabled=1, reminder_mode='daily', reminder_time=?, reminder_weekday=NULL, reminder_weekdays_mask=?, reminder_once_at=NULL, once_sent=0, last_sent_date=NULL WHERE id=?",
+                (t, store_mask, checklist_id),
             )
         else:
-            from datetime import datetime, timedelta
             from zoneinfo import ZoneInfo
+            from datetime import datetime
 
             now = datetime.now(ZoneInfo("Europe/Moscow"))
-            target = now.replace(hour=int(t[:2]), minute=int(t[3:]), second=0, microsecond=0)
-
-            if weekday is None:
-                # ближайшее такое время (как раньше)
+            if mask == ((1 << 7) - 1):
+                # as before: ближайшее такое время
+                from datetime import timedelta
+                target = now.replace(hour=int(t[:2]), minute=int(t[3:]), second=0, microsecond=0)
                 if target <= now:
                     target = target + timedelta(days=1)
             else:
-                days_ahead = (weekday - now.weekday()) % 7
-                if days_ahead == 0 and target <= now:
-                    days_ahead = 7
-                target = target + timedelta(days=days_ahead)
+                target = _next_occurrence_for_mask(now, t, mask)
 
             once_at = target.strftime("%d.%m.%Y %H:%M")
             await db.execute(
-                "UPDATE checklists SET reminder_enabled=1, reminder_mode='once', reminder_time=NULL, reminder_once_at=?, reminder_weekday=?, once_sent=0 WHERE id=?",
-                (once_at, weekday, checklist_id),
+                "UPDATE checklists SET reminder_enabled=1, reminder_mode='once', reminder_time=NULL, reminder_once_at=?, reminder_weekday=NULL, reminder_weekdays_mask=?, once_sent=0 WHERE id=?",
+                (once_at, None if mask == ((1 << 7) - 1) else mask, checklist_id),
             )
         await db.commit()
 
@@ -391,6 +468,27 @@ async def cl_set_weekday(cb: CallbackQuery, state: FSMContext):
         ),
     )
     await cb.answer()
+
+
+# Backward compatibility: old single weekday selector callbacks.
+@router.callback_query(F.data.startswith("cl_weekday:"))
+async def cl_set_weekday_legacy(cb: CallbackQuery, state: FSMContext):
+    # cl_weekday:{checklist_id}:{weekday|any}
+    _, checklist_id_str, wd_str = cb.data.split(":")
+    checklist_id = int(checklist_id_str)
+    if wd_str == "any":
+        mask = (1 << 7) - 1
+    else:
+        try:
+            wd = int(wd_str)
+            mask = (1 << wd)
+        except Exception:
+            await cb.answer()
+            return
+    await state.update_data(days_mask=mask)
+    # Reuse the new "done" flow
+    cb.data = f"cl_days_done:{checklist_id}"
+    await cl_days_done(cb, state)
 
 
 # --- Удаляем чек-лист ---

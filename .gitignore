@@ -2,6 +2,6 @@ start.bat
 venv_start.bat
 .git/
 .vs/
-venv/
+.venv/
 config.py
 .gitignore
