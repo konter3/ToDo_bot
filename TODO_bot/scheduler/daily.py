@@ -135,14 +135,16 @@ async def send_due(bot: Bot):
                 await asyncio.sleep(PAUSE_BETWEEN_BATCH)
 
         # --- чек-листы: daily ---
+        weekday = now.weekday()  # 0=Mon..6=Sun
         cur = await db.execute(
             """SELECT id, user_id
                FROM checklists
                WHERE reminder_enabled=1
                  AND reminder_mode='daily'
                  AND reminder_time=?
+                 AND (reminder_weekday IS NULL OR reminder_weekday=?)
                  AND (last_sent_date IS NULL OR last_sent_date<>?)""",
-            (hhmm, today)
+            (hhmm, weekday, today)
         )
         daily_lists = await cur.fetchall()
 

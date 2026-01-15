@@ -96,7 +96,7 @@ async def done_tasks(cb: CallbackQuery):
     await safe_edit(cb, text, reply_markup=keyboard)
 
 
-@router.callback_query(F.data.startswith("clear_completed"))
+@router.callback_query(F.data.startswith("clear_completed::"))
 async def clear_completed(cb: CallbackQuery):
     page = 1
     try:

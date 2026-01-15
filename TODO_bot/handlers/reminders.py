@@ -23,13 +23,18 @@ from texts import (
 
 router = Router()
 
-def _is_hhmm(s: str) -> bool:
+
+def _parse_hhmm(s: str) -> str | None:
+    """Accepts '9:30' or '09:30' and returns normalized 'HH:MM'."""
     try:
         hh, mm = s.split(":")
-        hh = int(hh); mm = int(mm)
-        return 0 <= hh <= 23 and 0 <= mm <= 59
+        hh_i = int(hh)
+        mm_i = int(mm)
+        if 0 <= hh_i <= 23 and 0 <= mm_i <= 59:
+            return f"{hh_i:02d}:{mm_i:02d}"
     except Exception:
-        return False
+        pass
+    return None
 
 
 def daily_settings_kb(enabled: bool):
@@ -90,14 +95,15 @@ async def daily_reminder_time_msg(message: Message, state: FSMContext):
         return
 
     t = message.text.strip()
-    if not _is_hhmm(t):
+    norm = _parse_hhmm(t)
+    if not norm:
         await message.answer(TIME_INPUT_BAD)
         return
 
     async with aiosqlite.connect(DB_NAME) as db:
         await db.execute(
             "UPDATE users SET daily_reminder_time=?, daily_reminder_enabled=1 WHERE user_id=?",
-            (t, message.from_user.id)
+            (norm, message.from_user.id)
         )
         await db.commit()
 

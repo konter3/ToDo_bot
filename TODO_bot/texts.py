@@ -22,6 +22,7 @@ BTN_CLEAR_HISTORY = "🗑 Очистить историю"
 BTN_ADD_CHECKLIST = "➕ Добавить чек-лист"
 BTN_CHECKLIST_BACK_TO_LIST = "⬅️ Назад к списку чек-листов"
 BTN_CHECKLIST_REMINDERS = "⏰ Напоминания"
+BTN_CHECKLIST_EDIT = "✏️ Редактировать"
 BTN_CHECKLIST_DELETE = "🗑️ Удалить чек-лист"
 BTN_CHECKLIST_OPEN_REMINDERS = "⏰ Открыть настройки напоминаний"
 
@@ -104,7 +105,33 @@ DAILY_ENABLED_SHORT = "🔔 Включено"
 CL_REMINDER_MENU = "⏰ Напоминания чек-листа\n\nТекущее: {info}\n\nВыберите режим:"
 CL_INFO_OFF = "выключено 🔕"
 CL_INFO_DAILY = "ежедневно в {time} ✅"
+CL_INFO_WEEKLY = "каждый {weekday} в {time} ✅"
 CL_INFO_ONCE_SENT = "один раз (уже отправлено) ✅"
 CL_INFO_ONCE_AT = "один раз: {once_at} ✅"
 CL_PROMPT_DAILY = "🕘 Введите время (HH:MM), в которое присылать чек-лист ежедневно."
 CL_PROMPT_ONCE = "🕘 Введите время (HH:MM), в которое прислать чек-лист один раз (ближайшее такое время)."
+CL_PROMPT_WEEKDAY = "📅 Выберите день недели, когда присылать чек-лист."
+
+# Weekdays
+WEEKDAYS = [
+    "Понедельник",
+    "Вторник",
+    "Среда",
+    "Четверг",
+    "Пятница",
+    "Суббота",
+    "Воскресенье",
+]
+WEEKDAYS_SHORT = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
+
+# Checklist edit
+CHECKLIST_EDIT_PROMPT = (
+    "✏️ Отправьте новый список пунктов\n"
+    "Каждый пункт — с новой строки.\n\n"
+    "Пример:\n"
+    "Купить молоко\n"
+    "Позвонить маме\n"
+    "Записаться к врачу\n\n"
+    "Старые пункты будут заменены."
+)
+CHECKLIST_EDIT_SAVED = "✅ Пункты чек-листа обновлены"
