@@ -12,6 +12,8 @@ from texts import (
     BTN_CHECKLIST_BACK_TO_LIST,
     BTN_CHECKLIST_DELETE,
     BTN_CHECKLIST_EDIT,
+    BTN_CHECKLIST_ADD_ITEM,
+    BTN_CHECKLIST_DELETE_ITEM,
     BTN_CHECKLIST_REMINDERS,
     BTN_CHECKLIST_OPEN_REMINDERS,
     BTN_CL_DISABLE,
@@ -42,8 +44,13 @@ from texts import (
     BTN_EVERY_DAY,
     WEEKDAYS_SHORT,
     WEEKDAYS,
-    CHECKLIST_EDIT_PROMPT,
-    CHECKLIST_EDIT_SAVED,
+    CHECKLIST_EDIT_PICK_ITEM,
+    CHECKLIST_EDIT_ITEM_PROMPT,
+    CHECKLIST_EDIT_ITEM_SAVED,
+    CHECKLIST_ADD_ITEM_PROMPT,
+    CHECKLIST_ADD_ITEM_SAVED,
+    CHECKLIST_DELETE_PICK_ITEM,
+    CHECKLIST_DELETE_ITEM_SAVED,
 )
 
 router = Router()
@@ -111,7 +118,15 @@ async def open_checklist(cb: CallbackQuery):
                 )
             ] for item_id, title, completed in items
         ] + [
-            [InlineKeyboardButton(text=BTN_CHECKLIST_EDIT, callback_data=f"checklist_edit:{checklist_id}")],
+            [
+                InlineKeyboardButton(text=BTN_CHECKLIST_ADD_ITEM, callback_data=f"checklist_add_item:{checklist_id}"),
+            ],
+            [
+                InlineKeyboardButton(text=BTN_CHECKLIST_EDIT, callback_data=f"checklist_edit:{checklist_id}"),
+            ],
+            [
+                InlineKeyboardButton(text=BTN_CHECKLIST_DELETE_ITEM, callback_data=f"checklist_delete_item:{checklist_id}"),
+            ],
             [InlineKeyboardButton(text=BTN_CHECKLIST_REMINDERS, callback_data=f"checklist_reminder_menu:{checklist_id}")],
             [InlineKeyboardButton(text=BTN_CHECKLIST_DELETE, callback_data=f"delete_checklist:{checklist_id}")],
             [InlineKeyboardButton(text=BTN_CHECKLIST_BACK_TO_LIST, callback_data="checklists")]
@@ -147,54 +162,180 @@ async def toggle_checklist_item(cb: CallbackQuery):
     await open_checklist(cb)
 
 
-# --- Редактирование пунктов чек-листа ---
+# --- Управление пунктами чек-листа ---
+
+
 @router.callback_query(F.data.startswith("checklist_edit:"))
-async def checklist_edit(cb: CallbackQuery, state: FSMContext):
+async def checklist_edit_menu(cb: CallbackQuery, state: FSMContext):
+    """Show a menu to choose which item to edit."""
+    await state.clear()
     checklist_id = int(cb.data.split(":")[1])
-    await state.set_state(ChecklistEdit.waiting_for_items)
-    await state.update_data(checklist_id=checklist_id)
-    await cb.message.edit_text(
-        CHECKLIST_EDIT_PROMPT,
-        reply_markup=InlineKeyboardMarkup(
+
+    async with aiosqlite.connect(DB_NAME) as db:
+        cur = await db.execute(
+            "SELECT id, title FROM checklist_items WHERE checklist_id=? ORDER BY id ASC",
+            (checklist_id,),
+        )
+        items = await cur.fetchall()
+
+    if not items:
+        kb = InlineKeyboardMarkup(
             inline_keyboard=[[InlineKeyboardButton(text=BTN_BACK, callback_data=f"checklist:{checklist_id}")]]
-        ),
+        )
+        await cb.message.edit_text("📭 В чек-листе пока нет пунктов.", reply_markup=kb)
+        await cb.answer()
+        return
+
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text=title, callback_data=f"checklist_edit_item:{checklist_id}:{item_id}")]
+            for item_id, title in items
+        ] + [[InlineKeyboardButton(text=BTN_BACK, callback_data=f"checklist:{checklist_id}")]]
     )
+    await cb.message.edit_text(CHECKLIST_EDIT_PICK_ITEM, reply_markup=keyboard)
     await cb.answer()
 
 
-@router.message(ChecklistEdit.waiting_for_items)
-async def checklist_edit_items_msg(message: Message, state: FSMContext):
-    if not message.text:
-        await message.answer(CHECKLIST_EDIT_PROMPT)
-        return
+@router.callback_query(F.data.startswith("checklist_edit_item:"))
+async def checklist_edit_item_start(cb: CallbackQuery, state: FSMContext):
+    # checklist_edit_item:{checklist_id}:{item_id}
+    _, checklist_id_str, item_id_str = cb.data.split(":")
+    checklist_id = int(checklist_id_str)
+    item_id = int(item_id_str)
 
-    raw = message.text.strip()
-    items = [line.strip() for line in raw.splitlines() if line.strip()]
-    if not items:
-        await message.answer("❌ Нужно минимум 1 пункт")
+    await state.set_state(ChecklistEdit.waiting_for_item_text)
+    await state.update_data(checklist_id=checklist_id, item_id=item_id)
+
+    kb = InlineKeyboardMarkup(
+        inline_keyboard=[[InlineKeyboardButton(text=BTN_BACK, callback_data=f"checklist_edit:{checklist_id}")]]
+    )
+    await cb.message.edit_text(CHECKLIST_EDIT_ITEM_PROMPT, reply_markup=kb)
+    await cb.answer()
+
+
+@router.message(ChecklistEdit.waiting_for_item_text)
+async def checklist_edit_item_msg(message: Message, state: FSMContext):
+    if not message.text:
+        await message.answer(CHECKLIST_EDIT_ITEM_PROMPT)
+        return
+    new_text = message.text.strip()
+    if not new_text:
+        await message.answer(CHECKLIST_EDIT_ITEM_PROMPT)
         return
 
     data = await state.get_data()
     checklist_id = int(data["checklist_id"])
+    item_id = int(data["item_id"])
 
     async with aiosqlite.connect(DB_NAME) as db:
-        # Replace items полностью
-        await db.execute("DELETE FROM checklist_items WHERE checklist_id=?", (checklist_id,))
-        await db.executemany(
-            "INSERT INTO checklist_items (checklist_id, title, completed) VALUES (?, ?, 0)",
-            [(checklist_id, title) for title in items],
+        await db.execute(
+            "UPDATE checklist_items SET title=? WHERE id=? AND checklist_id=?",
+            (new_text, item_id, checklist_id),
         )
         await db.commit()
 
     await state.clear()
-
     kb = InlineKeyboardMarkup(
         inline_keyboard=[
             [InlineKeyboardButton(text="Открыть чек-лист", callback_data=f"checklist:{checklist_id}")],
             [InlineKeyboardButton(text=BTN_MENU, callback_data="menu")],
         ]
     )
-    await message.answer(CHECKLIST_EDIT_SAVED, reply_markup=kb)
+    await message.answer(CHECKLIST_EDIT_ITEM_SAVED, reply_markup=kb)
+
+
+@router.callback_query(F.data.startswith("checklist_add_item:"))
+async def checklist_add_item_start(cb: CallbackQuery, state: FSMContext):
+    checklist_id = int(cb.data.split(":")[1])
+    await state.set_state(ChecklistEdit.waiting_for_new_item_text)
+    await state.update_data(checklist_id=checklist_id)
+
+    kb = InlineKeyboardMarkup(
+        inline_keyboard=[[InlineKeyboardButton(text=BTN_BACK, callback_data=f"checklist:{checklist_id}")]]
+    )
+    await cb.message.edit_text(CHECKLIST_ADD_ITEM_PROMPT, reply_markup=kb)
+    await cb.answer()
+
+
+@router.message(ChecklistEdit.waiting_for_new_item_text)
+async def checklist_add_item_msg(message: Message, state: FSMContext):
+    if not message.text:
+        await message.answer(CHECKLIST_ADD_ITEM_PROMPT)
+        return
+    title = message.text.strip()
+    if not title:
+        await message.answer(CHECKLIST_ADD_ITEM_PROMPT)
+        return
+
+    data = await state.get_data()
+    checklist_id = int(data["checklist_id"])
+
+    async with aiosqlite.connect(DB_NAME) as db:
+        await db.execute(
+            "INSERT INTO checklist_items (checklist_id, title, completed) VALUES (?, ?, 0)",
+            (checklist_id, title),
+        )
+        await db.commit()
+
+    await state.clear()
+    kb = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="Открыть чек-лист", callback_data=f"checklist:{checklist_id}")],
+            [InlineKeyboardButton(text=BTN_MENU, callback_data="menu")],
+        ]
+    )
+    await message.answer(CHECKLIST_ADD_ITEM_SAVED, reply_markup=kb)
+
+
+@router.callback_query(F.data.startswith("checklist_delete_item:"))
+async def checklist_delete_item_menu(cb: CallbackQuery, state: FSMContext):
+    await state.clear()
+    checklist_id = int(cb.data.split(":")[1])
+
+    async with aiosqlite.connect(DB_NAME) as db:
+        cur = await db.execute(
+            "SELECT id, title FROM checklist_items WHERE checklist_id=? ORDER BY id ASC",
+            (checklist_id,),
+        )
+        items = await cur.fetchall()
+
+    if not items:
+        kb = InlineKeyboardMarkup(
+            inline_keyboard=[[InlineKeyboardButton(text=BTN_BACK, callback_data=f"checklist:{checklist_id}")]]
+        )
+        await cb.message.edit_text("📭 В чек-листе пока нет пунктов.", reply_markup=kb)
+        await cb.answer()
+        return
+
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text=title, callback_data=f"checklist_delete_item_do:{checklist_id}:{item_id}")]
+            for item_id, title in items
+        ] + [[InlineKeyboardButton(text=BTN_BACK, callback_data=f"checklist:{checklist_id}")]]
+    )
+
+    await cb.message.edit_text(CHECKLIST_DELETE_PICK_ITEM, reply_markup=keyboard)
+    await cb.answer()
+
+
+@router.callback_query(F.data.startswith("checklist_delete_item_do:"))
+async def checklist_delete_item_do(cb: CallbackQuery):
+    # checklist_delete_item_do:{checklist_id}:{item_id}
+    _, checklist_id_str, item_id_str = cb.data.split(":")
+    checklist_id = int(checklist_id_str)
+    item_id = int(item_id_str)
+
+    async with aiosqlite.connect(DB_NAME) as db:
+        await db.execute(
+            "DELETE FROM checklist_items WHERE id=? AND checklist_id=?",
+            (item_id, checklist_id),
+        )
+        await db.commit()
+
+    # Back to checklist
+    cb.data = f"checklist:{checklist_id}"
+    await open_checklist(cb)
+    await cb.answer(CHECKLIST_DELETE_ITEM_SAVED)
 
 
 

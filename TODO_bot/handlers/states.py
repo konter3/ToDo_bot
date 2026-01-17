@@ -13,4 +13,7 @@ class ChecklistReminder(StatesGroup):
 
 
 class ChecklistEdit(StatesGroup):
-    waiting_for_items = State()
+    # Edit a single checklist item
+    waiting_for_item_text = State()
+    # Add a new checklist item
+    waiting_for_new_item_text = State()

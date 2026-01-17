@@ -23,6 +23,8 @@ BTN_ADD_CHECKLIST = "➕ Добавить чек-лист"
 BTN_CHECKLIST_BACK_TO_LIST = "⬅️ Назад к списку чек-листов"
 BTN_CHECKLIST_REMINDERS = "⏰ Напоминания"
 BTN_CHECKLIST_EDIT = "✏️ Редактировать"
+BTN_CHECKLIST_ADD_ITEM = "➕ Добавить пункт"
+BTN_CHECKLIST_DELETE_ITEM = "➖ Удалить пункт"
 BTN_CHECKLIST_DELETE = "🗑️ Удалить чек-лист"
 BTN_CHECKLIST_OPEN_REMINDERS = "⏰ Открыть настройки напоминаний"
 
@@ -130,13 +132,12 @@ WEEKDAYS = [
 WEEKDAYS_SHORT = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
 
 # Checklist edit
-CHECKLIST_EDIT_PROMPT = (
-    "✏️ Отправьте новый список пунктов\n"
-    "Каждый пункт — с новой строки.\n\n"
-    "Пример:\n"
-    "Купить молоко\n"
-    "Позвонить маме\n"
-    "Записаться к врачу\n\n"
-    "Старые пункты будут заменены."
-)
-CHECKLIST_EDIT_SAVED = "✅ Пункты чек-листа обновлены"
+CHECKLIST_EDIT_PICK_ITEM = "✏️ Выберите пункт, который хотите отредактировать:"
+CHECKLIST_EDIT_ITEM_PROMPT = "✏️ Отправьте новый текст для выбранного пункта:"
+CHECKLIST_EDIT_ITEM_SAVED = "✅ Пункт обновлён"
+
+CHECKLIST_ADD_ITEM_PROMPT = "➕ Отправьте текст нового пункта:"
+CHECKLIST_ADD_ITEM_SAVED = "✅ Пункт добавлен"
+
+CHECKLIST_DELETE_PICK_ITEM = "➖ Выберите пункт, который нужно удалить:"
+CHECKLIST_DELETE_ITEM_SAVED = "🗑️ Пункт удалён"
